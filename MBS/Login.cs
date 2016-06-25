@@ -13,6 +13,7 @@ namespace MBS
     public partial class Login : Form
     {
         public int tries = 0;
+        public bool validate = false;
 
         public Login()
         {
@@ -21,28 +22,35 @@ namespace MBS
 
         private void textBox1_KeyDown(object sender, KeyEventArgs e)
         {
-                if (e.KeyCode == Keys.Enter)
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (textBox1.Text.ToUpper() == "MAREMA168" || textBox1.Text.ToUpper() == "314159")
                 {
-                    if (textBox1.Text.ToUpper() == "MAREMA168" || textBox1.Text.ToUpper() == "314159")
-                    {
-                        this.Close();
-                    }
-                    else if (textBox1.Text.ToUpper() == "BB")
-                    {
-                        Args.admin = false;
-                        this.Close();
-                    }
-                    else
-                    {
-                        tries += 1;
-                        textBox1.Text = "";
-                        if (tries > 2)
-                        {
-                            System.Windows.Forms.Application.Exit();
-                        }
-
-                    }
+                    validate = true;
+                    this.Close();
                 }
+                else if (textBox1.Text.ToUpper() == "BB")
+                {
+                    validate = true;
+                    Args.admin = false;
+                    this.Close();
+                }
+                else
+                {
+                    tries += 1;
+                    textBox1.Text = "";
+                    if (tries > 2)
+                    {
+                        System.Windows.Forms.Application.Exit();
+                    }
+
+                }
+            }
+
+            if (e.KeyCode == Keys.Escape)
+            {
+                System.Windows.Forms.Application.Exit();
+            }
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -60,6 +68,14 @@ namespace MBS
                 textBox1.Enabled = false;
                 textBox1.Visible = false;
                 timer1.Start();
+            }
+        }
+
+        private void Login_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (validate == false)
+            {
+                System.Windows.Forms.Application.Exit();
             }
         }
     }

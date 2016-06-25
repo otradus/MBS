@@ -23,10 +23,28 @@ namespace MBS
             Login login = new Login();
             login.ShowDialog();
 
-            App.formatDataGridView(dataGridView1);
-            App.DoubleBuffered(dataGridView1, true);
-            App.loadTable(dataGridView1, "SELECT * FROM barang WHERE Kelompok = 'PIGEON'");
-            this.ActiveControl = textBox1;
+            try
+            {
+                this.Show();
+                App.formatDataGridView(dataGridView1);
+                App.DoubleBuffered(dataGridView1, true);
+                App.loadTable(dataGridView1, "SELECT * FROM barang WHERE Kelompok = 'PIGEON'");
+
+                this.ActiveControl = textBox1;
+
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Password Salah");
+            }
+        }
+
+        private void textBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                App.loadTable(dataGridView1, "SELECT * FROM barang WHERE NamaBarang LIKE '%" + textBox1.Text + "%'");
+            }
         }
     }
 }
