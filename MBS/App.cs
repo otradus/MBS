@@ -1,27 +1,30 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Data;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 
 namespace MBS
 {
-    class App
+    public static class App
     {
-        public static string toko = Environment.GetCommandLineArgs()[1].ToString();
-        public static bool admin = Convert.ToBoolean(Environment.GetCommandLineArgs()[2].ToString());
-        public static string printer = Environment.GetCommandLineArgs()[3].ToString();
-
+        public static void DoubleBuffered(this DataGridView dgv, bool setting)
+        {
+            Type dgvType = dgv.GetType();
+            PropertyInfo pi = dgvType.GetProperty("DoubleBuffered",
+                  BindingFlags.Instance | BindingFlags.NonPublic);
+            pi.SetValue(dgv, setting, null);
+        }
 
         public static string getConnectionString()
         {
-            string[] settings = System.IO.File.ReadAllLines(@"C:\test\settingskaos.ini");
+            string[] settings = Args.getSQLiteSettings();
             MySqlConnectionStringBuilder connstring = new MySqlConnectionStringBuilder();
-            connstring.Server = settings[0];
-            connstring.UserID = settings[1];
-            connstring.Password = settings[2];
-            connstring.Database = Environment.GetCommandLineArgs()[1].ToString();
-
+            connstring.Server = settings[2];
+            connstring.UserID = settings[0];
+            connstring.Password = settings[1];
+            connstring.Database = settings[3];
 
             return connstring.ToString();
         }
@@ -167,6 +170,29 @@ namespace MBS
             return strtomoney(money);
         }
 
+        public static decimal moneytodecimal(string str)
+        {
+            try
+            {
+                str = str.Replace("Rp", "");
+                str = str.Replace(".", "");
+                return Convert.ToDecimal(str);
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex.ToString());
+                return 0;
+            }
+        }
+
+        public static string decimaltomoney(object amount)
+        {
+            string money = Convert.ToString(amount);
+            return strtomoney(money);
+        }
+
+
         public static void formatDataGridView(DataGridView dgv)
         {
             dgv.MultiSelect = false;
@@ -251,7 +277,7 @@ namespace MBS
 
             System.IO.File.WriteAllText(@"C:\test\invoicekaos.txt", sb.ToString());
 
-            shellCommand("copy c:\\test\\invoicekaos.txt " + printer);
+            shellCommand("copy c:\\test\\invoicekaos.txt " + Args.printer);
 
         }
 
@@ -285,7 +311,7 @@ namespace MBS
 
             System.IO.File.WriteAllText(@"C:\test\invoicekaospembelian.txt", sb.ToString());
 
-            shellCommand("copy c:\\test\\invoicekaospembelian.txt " + printer);
+            shellCommand("copy c:\\test\\invoicekaospembelian.txt " + Args.printer);
 
         }
 

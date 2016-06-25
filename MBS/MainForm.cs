@@ -16,5 +16,17 @@ namespace MBS
         {
             InitializeComponent();
         }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            this.Hide();
+            Login login = new Login();
+            login.ShowDialog();
+
+            App.formatDataGridView(dataGridView1);
+            App.DoubleBuffered(dataGridView1, true);
+            App.loadTable(dataGridView1, "SELECT * FROM barang WHERE Kelompok = 'PIGEON'");
+            this.ActiveControl = textBox1;
+        }
     }
 }
