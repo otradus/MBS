@@ -122,7 +122,7 @@ namespace MBS
 
             foreach (DataRow dr in dt.Rows)
             {
-                cmbx.Items.Add(dr["Merk"]);
+                cmbx.Items.Add(dr["Nama"]);
             }
 
             //            cmbx.DataSource = dt;

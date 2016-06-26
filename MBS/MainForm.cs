@@ -46,5 +46,11 @@ namespace MBS
                 App.loadTable(dataGridView1, "SELECT * FROM barang WHERE NamaBarang LIKE '%" + textBox1.Text + "%'");
             }
         }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Barang barang = new Barang();
+            barang.ShowDialog();
+        }
     }
 }
