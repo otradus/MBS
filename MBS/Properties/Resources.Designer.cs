@@ -133,6 +133,16 @@ namespace MBS.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Sign_In {
+            get {
+                object obj = ResourceManager.GetObject("Sign_In", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Tres {
             get {
                 object obj = ResourceManager.GetObject("Tres", resourceCulture);

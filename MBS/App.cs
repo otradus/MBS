@@ -19,7 +19,7 @@ namespace MBS
 
         public static string getConnectionString()
         {
-            string[] settings = Args.getSQLiteSettings();
+            string[] settings = Args.getSQLiteSettings(Args.local);
             MySqlConnectionStringBuilder connstring = new MySqlConnectionStringBuilder();
             connstring.Server = settings[2];
             connstring.UserID = settings[0];
@@ -28,6 +28,7 @@ namespace MBS
 
             return connstring.ToString();
         }
+
 
         public static DataTable executeReader(string query)
 
@@ -106,6 +107,7 @@ namespace MBS
             dtv.DataSource = dt;
             if (dtv.Columns["Harga"] != null) { dtv.Columns["Harga"].DefaultCellStyle.Format = "c"; }
             if (dtv.Columns["HargaBeli"] != null) { dtv.Columns["HargaBeli"].DefaultCellStyle.Format = "c"; }
+            if (dtv.Columns["HargaJual"] != null) { dtv.Columns["HargaJual"].DefaultCellStyle.Format = "c"; }
             if (dtv.Columns["Subtotal"] != null) { dtv.Columns["Subtotal"].DefaultCellStyle.Format = "c"; }
             //           dtv.Columns["Harga"].DefaultCellStyle.Format = "c";
             //         dtv.Columns["HargaBeli"].DefaultCellStyle.Format = "c";
@@ -200,13 +202,21 @@ namespace MBS
             dgv.AllowUserToDeleteRows = false;
             dgv.AllowUserToOrderColumns = false;
             dgv.AllowUserToResizeColumns = false;
-            dgv.AllowUserToResizeRows = false;
             dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgv.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            dgv.AllowUserToResizeRows = false;
             dgv.ReadOnly = true;
             dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgv.RowHeadersVisible = false;
+        }
 
+        public static void autoSizeDataGridView(DataGridView dgv)
+        {
+            dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            if (dgv.Columns.Count > 0)
+            {
+                dgv.Columns[dgv.Columns.Count - 1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            }
         }
 
         public static int cInt(object obj)
@@ -318,7 +328,6 @@ namespace MBS
         public static void printBarcode(string kode, string nama, string harga, string queue, string printerbarcode)
         {
             StringBuilder sb = new StringBuilder();
-            //            sb.AppendLine("Tasikmalaya");
 
             sb.AppendLine(Convert.ToChar(2) + "KI71");
             sb.AppendLine(Convert.ToChar(2) + "L");
@@ -375,6 +384,72 @@ namespace MBS
                    : value.Substring(0, maxLength)
                    );
         }
+
+        public static string getFaktur(DateTime tgl)
+        {
+            string tanggal = tgl.Day.ToString();
+            string bulan = tgl.Month.ToString();
+            string tahun = tgl.Year.ToString();
+
+            if (tanggal.Length < 2)
+            {
+                tanggal = "0" + tanggal;
+            }
+
+            if (bulan.Length < 2)
+            {
+                bulan = "0" + bulan;
+            }
+
+            tahun = tahun.Substring(2);
+
+            MySqlConnection conn = new MySqlConnection(App.getConnectionString());
+            object result;
+            try
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("Select COUNT(*) FROM penjualancompact WHERE Tanggal = '" + tgl.ToShortDateString() + "'", conn);
+                result = cmd.ExecuteScalar();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                result = null;
+            }
+            conn.Close();
+
+            string nomor = "";
+            string urut;
+
+            if (Convert.ToString(result) != "0")
+            {
+                urut = Convert.ToString(Convert.ToUInt32(result) + 1);
+            }
+            else
+            {
+                urut = "1";
+            }
+
+            if (urut.Length == 1)
+            {
+                nomor = "000" + urut;
+            }
+            else if (urut.Length == 2)
+            {
+                nomor = "00" + urut;
+            }
+            else if (urut.Length == 3)
+            {
+                nomor = "0" + urut;
+            }
+            else if (urut.Length == 4)
+            {
+                nomor = urut;
+            }
+
+            return tanggal + bulan + tahun + nomor;
+        }
+
     }
 
 }

@@ -35,6 +35,13 @@ namespace MBS
                     Args.admin = false;
                     this.Close();
                 }
+                else if (textBox1.Text.ToUpper() == "SETTINGS")
+                {
+                    textBox1.Text = "";
+                    Settings settings = new Settings();
+                    settings.ShowDialog();
+                    this.Close();
+                }
                 else
                 {
                     tries += 1;

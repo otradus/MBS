@@ -19,6 +19,7 @@ namespace MBS
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            Args.testConnection();
             this.Hide();
             Login login = new Login();
             login.ShowDialog();
@@ -51,6 +52,12 @@ namespace MBS
         {
             Barang barang = new Barang();
             barang.ShowDialog();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            UserLoginForm userlogin = new UserLoginForm("Penjualan");
+            userlogin.Show();
         }
     }
 }
