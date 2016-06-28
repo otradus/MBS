@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SQLite;
 using MySql.Data.MySqlClient;
+using System.Windows.Forms;
 
 namespace MBS
 {
@@ -12,55 +13,64 @@ namespace MBS
     {
         public static bool admin = Convert.ToBoolean(Environment.GetCommandLineArgs()[1].ToString());
         public static string printer = Environment.GetCommandLineArgs()[2].ToString();
-        public static bool local = true;
 
-        public static string[] getSQLiteSettings(bool local1)
-        {
-            SQLiteConnection conn = new SQLiteConnection("Data Source=settings.sqlite;Version=3;");
-            conn.Open();
+        public static string username, password, host, database;
 
-            string id;
-
-            if (local1 == true)
-            {
-                id = "1";
-            }
-            else
-            {
-                id = "2";
-            }
-
-            string sql = "SELECT * FROM connection WHERE id = '" + id + "'";
-            SQLiteCommand command = new SQLiteCommand(sql, conn);
-            SQLiteDataReader reader = command.ExecuteReader();
-
-            string[] setting = new string[4];
-
-            while (reader.Read())
-            {
-                setting[0] = reader["user"].ToString();
-                setting[1] = reader["password"].ToString();
-                setting[2] = reader["host"].ToString();
-                setting[3] = reader["database"].ToString();
-            }
-            conn.Close();
-
-            return setting;
-        }
-
-        public static void testConnection()
+        public static void getSQLiteSettings(bool local1)
         {
             try
             {
-                MySqlConnection conn = new MySqlConnection(App.getConnectionString());
+                SQLiteConnection conn = new SQLiteConnection("Data Source=settings.sqlite;Version=3;");
                 conn.Open();
+
+                string id;
+
+                if (local1 == true)
+                {
+                    id = "1";
+                }
+                else
+                {
+                    id = "2";
+                }
+
+                string sql = "SELECT * FROM connection WHERE id = '" + id + "'";
+                SQLiteCommand command = new SQLiteCommand(sql, conn);
+                SQLiteDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    username = reader["user"].ToString();
+                    password = reader["password"].ToString();
+                    host = reader["host"].ToString();
+                    database = reader["database"].ToString();
+                }
                 conn.Close();
+
             }
             catch (Exception)
             {
+                MessageBox.Show("SQLite Database Not Found. Please create database first.");
+                Settings settings = new Settings();
+                settings.ShowDialog();
+               
+            }
+        }
 
-                Args.local = false;
-
+        public static bool testConnection()
+        {
+            try
+            {
+                getSQLiteSettings(true);
+                MySqlConnection conn = new MySqlConnection(App.getConnectionString());
+                conn.Open();
+                conn.Close();
+                return true;
+            }
+            catch (Exception)
+            {
+                getSQLiteSettings(false);
+                return false;
             }
 
         }

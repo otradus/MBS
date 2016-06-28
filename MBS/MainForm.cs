@@ -19,7 +19,7 @@ namespace MBS
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            Args.testConnection();
+            Args.getSQLiteSettings(Args.testConnection());
             this.Hide();
             Login login = new Login();
             login.ShowDialog();
@@ -29,14 +29,14 @@ namespace MBS
                 this.Show();
                 App.formatDataGridView(dataGridView1);
                 App.DoubleBuffered(dataGridView1, true);
-                App.loadTable(dataGridView1, "SELECT * FROM barang WHERE Kelompok = 'PIGEON'");
+                App.loadTable(dataGridView1, "SELECT KodeBarang, NamaBarang, Kelompok, Satuan, Jumlah, HargaJual FROM barang WHERE Kelompok = 'PIGEON'");
 
                 this.ActiveControl = textBox1;
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show("Password Salah");
+                MessageBox.Show(ex.ToString());
             }
         }
 
@@ -44,7 +44,7 @@ namespace MBS
         {
             if (e.KeyCode == Keys.Enter)
             {
-                App.loadTable(dataGridView1, "SELECT * FROM barang WHERE NamaBarang LIKE '%" + textBox1.Text + "%'");
+                App.loadTable(dataGridView1, "SELECT KodeBarang, NamaBarang, Kelompok, Satuan, Jumlah, HargaJual FROM barang WHERE NamaBarang LIKE '%" + textBox1.Text + "%'");
             }
         }
 
@@ -58,6 +58,12 @@ namespace MBS
         {
             UserLoginForm userlogin = new UserLoginForm("Penjualan");
             userlogin.Show();
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            CetakUlangForm cetakulang = new CetakUlangForm();
+            cetakulang.ShowDialog();
         }
     }
 }

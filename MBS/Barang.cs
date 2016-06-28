@@ -47,7 +47,7 @@ namespace MBS
             App.formatDataGridView(dataGridView1);
             App.DoubleBuffered(dataGridView1, true);
             //App.loadTable(dataGridView1, "SELECT * FROM Barang");
-            App.loadComboBox(comboBox1, "SELECT * FROM Kelompok");
+            App.loadComboBox(comboBox1, "SELECT * FROM kelompok");
 
             this.ActiveControl = textBox1;
         }

@@ -19,12 +19,11 @@ namespace MBS
 
         public static string getConnectionString()
         {
-            string[] settings = Args.getSQLiteSettings(Args.local);
             MySqlConnectionStringBuilder connstring = new MySqlConnectionStringBuilder();
-            connstring.Server = settings[2];
-            connstring.UserID = settings[0];
-            connstring.Password = settings[1];
-            connstring.Database = settings[3];
+            connstring.Server = Args.host;
+            connstring.UserID = Args.username;
+            connstring.Password = Args.password;
+            connstring.Database = Args.database;
 
             return connstring.ToString();
         }
@@ -258,7 +257,7 @@ namespace MBS
 
             //PRINT INVOICE
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine(Convert.ToChar(27) + "a1" + Convert.ToChar(27) + "!4" + "Toko B.H. [KAOS]");
+            sb.AppendLine(Convert.ToChar(27) + "a1" + Convert.ToChar(27) + "!4" + "Maju Baby Shop");
             sb.AppendLine("Tasikmalaya");
             sb.AppendLine(Convert.ToChar(27) + "@");
             sb.AppendLine("Faktur: " + faktur + " Sales: " + sales);
@@ -278,7 +277,7 @@ namespace MBS
                 i += 1;
             }
 
-            sb.AppendLine("-----------------------------------------");
+            sb.AppendLine("----------------------------------------");
             sb.AppendLine("   Qty: " + qty.ToString() + Convert.ToChar(9) + Convert.ToChar(9) + " TOTAL: " + strtomoney(total.ToString()));
             sb.AppendLine("");
 
@@ -291,16 +290,16 @@ namespace MBS
 
         }
 
-        public static void printPembelian(string nota, string user)
+        public static void printPembelian(string faktur, string user)
         {
             DateTime tgl = DateTime.Now;
-            DataTable rs = executeReader("SELECT Kode, Nama, Jumlah FROM pembelian WHERE Nota = '" + nota + "'");
+            DataTable rs = executeReader("SELECT Kode, Nama, Jumlah FROM pembelian WHERE Faktur = '" + faktur + "'");
 
             //PRINT INVOICE
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine(Convert.ToChar(27) + "a1" + Convert.ToChar(27) + "!4" + "PEMBELIAN [KAOS]");
+            sb.AppendLine(Convert.ToChar(27) + "a1" + Convert.ToChar(27) + "!4" + "PEMBELIAN [BABY]");
             sb.AppendLine(Convert.ToChar(27) + "@");
-            sb.AppendLine("Nota: " + nota + " User: " + user);
+            sb.AppendLine("Faktur: " + faktur + " User: " + user);
             sb.AppendLine("Tanggal: " + tgl.ToShortDateString() + " Jam: " + tgl.ToShortTimeString());
             sb.AppendLine("");
             sb.AppendLine("========================================");

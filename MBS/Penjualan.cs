@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -34,7 +35,7 @@ namespace MBS
         public void inputPenjualan()
         {
             int jumlah = 0;
- 
+
             if (label6.Text != "" && textBox1.Text != "" && textBox2.Text != "" && textBox3.Text != "")
             {
 
@@ -216,6 +217,105 @@ namespace MBS
                 textBox1.Text = cari.valueFromCari;
                 textBox2.Focus();
                 // do what ever with result...
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.RowCount != 0)
+            {
+                DateTime tgl = DateTime.Now;
+                MySqlConnection conn = new MySqlConnection(App.getConnectionString());
+                MySqlCommand cmd = new MySqlCommand();
+
+                string lastfaktur = App.getFaktur(tgl);
+
+                try
+                {
+                    conn.Open();
+                    cmd.Connection = conn;
+
+                    string kode;
+                    string nama;
+                    string jumlah;
+                    string harga;
+                    string subtotal;
+                    double total = 0;
+                    double laba = 0;
+                    double labatotal = 0;
+
+                    for (int i = 0; i < dataGridView1.RowCount; i++)
+                    {
+                        kode = dataGridView1[0, i].Value.ToString();
+                        nama = dataGridView1[1, i].Value.ToString();
+                        jumlah = dataGridView1[3, i].Value.ToString();
+                        harga = App.stripMoney(dataGridView1[4, i].Value.ToString());
+                        subtotal = App.stripMoney(dataGridView1[5, i].Value.ToString());
+
+                        laba = (Convert.ToDouble(harga) - Convert.ToDouble(App.executeScalar("SELECT HargaBeli FROM barang WHERE KodeBarang = '" + kode + "'").ToString())) * Convert.ToDouble(jumlah);
+
+
+                        labatotal += laba;
+
+                        cmd.CommandText = "INSERT INTO penjualan SET Tanggal='" + tgl.ToShortDateString() + "', Faktur='" + lastfaktur + "',KodeBarang='" + kode + "',NamaBarang='" + nama + "',Jumlah='" + jumlah + "',Harga='" + harga + "',Subtotal='" + subtotal + "',Laba='" + laba + "'";
+                        cmd.ExecuteNonQuery();
+
+                        //check if jumlah = 0
+                        int cekjumlah = Convert.ToInt32(App.executeScalar("SELECT Jumlah FROM barang WHERE KodeBarang = '" + kode + "'"));
+                        if (cekjumlah - Convert.ToInt32(jumlah) >= 0)
+                        {
+                            cmd.CommandText = "UPDATE barang SET Jumlah = Jumlah - '" + jumlah + "' WHERE KodeBarang = '" + kode + "'";
+                            cmd.ExecuteNonQuery();
+                        }
+                        else
+                        {
+                            MessageBox.Show("PERHATIAN: Jumlah barang " + nama + " sudah 0 di komputer");
+                            cmd.CommandText = "UPDATE barang SET Jumlah = '0' WHERE KodeBarang = '" + kode + "'";
+                            cmd.ExecuteNonQuery();
+                        }
+
+
+                        addLorisan(kode, nama, jumlah);
+
+                        total += App.cDouble(App.stripMoney(dataGridView1[4, i].Value.ToString()));
+                    }
+
+                    cmd.CommandText = "INSERT INTO penjualancompact SET Tanggal='" + tgl.ToShortDateString() + "', Faktur='" + lastfaktur + "', User='" + user + "',Total='" + total + "',Laba='" + labatotal + "', Bayar='0'";
+                    cmd.ExecuteNonQuery();
+
+
+                    conn.Close();
+
+                }
+
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
+
+
+                App.printPenjualan(lastfaktur, user);
+
+
+                this.Close();
+
+            }
+            else
+            {
+                MessageBox.Show("Penjualan masih kosong!");
+            }
+        }
+
+        public void addLorisan(string kode, string nama, string jumlah)
+        {
+            DateTime tgl = DateTime.Now;
+            if (App.executeScalar("SELECT Jumlah FROM lorisan WHERE NamaBarang = '" + kode + "' LIMIT 1") == null)
+            {
+                App.executeNonQuery("INSERT INTO lorisan SET Tanggal = '" + tgl.ToShortDateString() + "', KodeBarang = '" + kode + "', NamaBarang = '" + nama + "', Jumlah = '" + jumlah + "'");
+            }
+            else
+            {
+                App.executeNonQuery("UPDATE lorisan SET Jumlah = Jumlah + '" + jumlah + "' WHERE KodeBarang = '" + kode + "'");
             }
         }
     }
