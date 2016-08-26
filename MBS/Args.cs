@@ -11,8 +11,10 @@ namespace MBS
 {
     class Args
     {
-        public static bool admin = Convert.ToBoolean(Environment.GetCommandLineArgs()[1].ToString());
-        public static string printer = Environment.GetCommandLineArgs()[2].ToString();
+        public static bool admin;
+        public static bool poledisplay;
+        public static string printer;
+        public static string printerbarcode;
 
         public static string username, password, host, database;
 
@@ -20,42 +22,157 @@ namespace MBS
         {
             try
             {
-                SQLiteConnection conn = new SQLiteConnection("Data Source=settings.sqlite;Version=3;");
-                conn.Open();
+                admin = getEnableAdmin();
+                poledisplay = getPoleDisplay();
+                printer = getPrinter();
+                printerbarcode = getPrinterBarcode();
 
-                string id;
-
-                if (local1 == true)
-                {
-                    id = "1";
-                }
-                else
-                {
-                    id = "2";
-                }
-
-                string sql = "SELECT * FROM connection WHERE id = '" + id + "'";
-                SQLiteCommand command = new SQLiteCommand(sql, conn);
-                SQLiteDataReader reader = command.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    username = reader["user"].ToString();
-                    password = reader["password"].ToString();
-                    host = reader["host"].ToString();
-                    database = reader["database"].ToString();
-                }
-                conn.Close();
+                getMySQLConnection(local1);
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                MessageBox.Show(e.Message);
                 MessageBox.Show("SQLite Database Not Found. Please create database first.");
                 Settings settings = new Settings();
                 settings.ShowDialog();
                
             }
         }
+
+        public static void getMySQLConnection(bool local1)
+        {
+            SQLiteConnection conn = new SQLiteConnection("Data Source=settings.sqlite;Version=3;");
+            conn.Open();
+
+            string id;
+
+            if (local1 == true)
+            {
+                id = "1";
+            }
+            else
+            {
+                id = "2";
+            }
+
+            string sql = "SELECT * FROM connection WHERE id = '" + id + "'";
+            SQLiteCommand command = new SQLiteCommand(sql, conn);
+            SQLiteDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                username = reader["user"].ToString();
+                password = reader["password"].ToString();
+                host = reader["host"].ToString();
+                database = reader["database"].ToString();
+            }
+            reader.Close();
+            conn.Close();
+
+        }
+
+        public static bool getEnableAdmin()
+        {
+            bool result = false;
+
+            try
+            {
+                SQLiteConnection conn = new SQLiteConnection("Data Source=settings.sqlite;Version=3;");
+                conn.Open();
+
+                string sql = "SELECT enableadmin FROM etc";
+                SQLiteCommand command = new SQLiteCommand(sql, conn);
+                SQLiteDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    if (reader["enableadmin"].ToString() == "1")
+                    {
+                        result = true;
+                    }
+                }
+
+                reader.Close();
+                conn.Close();
+
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.Message);
+            }
+
+            return result;
+
+        }
+
+        public static bool getPoleDisplay()
+        {
+            bool result = false;
+            SQLiteConnection conn = new SQLiteConnection("Data Source=settings.sqlite;Version=3;");
+            conn.Open();
+
+            string sql = "SELECT poledisplay FROM etc";
+            SQLiteCommand command = new SQLiteCommand(sql, conn);
+            SQLiteDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                if (reader["poledisplay"].ToString() == "1")
+                {
+                    result = true;
+                }
+            }
+
+            reader.Close();
+            conn.Close();
+
+            return result;
+        }
+
+        public static string getPrinter()
+        {
+            string result = "";
+            SQLiteConnection conn = new SQLiteConnection("Data Source=settings.sqlite;Version=3;");
+            conn.Open();
+
+            string sql = "SELECT printer FROM etc";
+            SQLiteCommand command = new SQLiteCommand(sql, conn);
+            SQLiteDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                result = reader["printer"].ToString();
+            }
+
+            reader.Close();
+            conn.Close();
+
+            return result;
+        }
+
+        public static string getPrinterBarcode()
+        {
+            string result = "";
+            SQLiteConnection conn = new SQLiteConnection("Data Source=settings.sqlite;Version=3;");
+            conn.Open();
+
+            string sql = "SELECT printerbarcode FROM etc";
+            SQLiteCommand command = new SQLiteCommand(sql, conn);
+            SQLiteDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                result = reader["printerbarcode"].ToString();
+            }
+
+            reader.Close();
+            conn.Close();
+
+            return result;
+        }
+
 
         public static bool testConnection()
         {
@@ -67,8 +184,9 @@ namespace MBS
                 conn.Close();
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                MessageBox.Show(ex.Message + " Using External Connection String");
                 getSQLiteSettings(false);
                 return false;
             }

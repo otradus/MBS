@@ -24,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -73,6 +74,12 @@
     <Compile Include="CetakUlangForm.designer.cs">
       <DependentUpon>CetakUlangForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="GudangForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GudangForm.Designer.cs">
+      <DependentUpon>GudangForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Kelompok.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -90,6 +97,12 @@
     </Compile>
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PembelianForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PembelianForm.Designer.cs">
+      <DependentUpon>PembelianForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Penjualan.cs">
       <SubType>Form</SubType>
@@ -120,6 +133,9 @@
     <EmbeddedResource Include="CetakUlangForm.resx">
       <DependentUpon>CetakUlangForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GudangForm.resx">
+      <DependentUpon>GudangForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Kelompok.resx">
       <DependentUpon>Kelompok.cs</DependentUpon>
     </EmbeddedResource>
@@ -128,6 +144,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PembelianForm.resx">
+      <DependentUpon>PembelianForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Penjualan.resx">
       <DependentUpon>Penjualan.cs</DependentUpon>
@@ -160,7 +179,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\IMAGE0120.JPG" />

@@ -31,13 +31,17 @@ namespace MBS
             conn = new SQLiteConnection("Data Source=settings.sqlite;Version=3;");
             conn.Open();
 
-            string sql = "create table if not exists users(username varchar(10), password varchar(10), admin integer)";
-            SQLiteCommand command = new SQLiteCommand(sql, conn);
-            command.ExecuteNonQuery();
+            //string sql = "create table if not exists users(username varchar(10), password varchar(10), admin integer)";
+            //SQLiteCommand command = new SQLiteCommand(sql, conn);
+            //command.ExecuteNonQuery();
 
             string sql2 = "CREATE TABLE IF NOT EXISTS connection(id int, user varchar(10), password varchar(30), host varchar(30), database varchar(10))";
             SQLiteCommand command2 = new SQLiteCommand(sql2, conn);
             command2.ExecuteNonQuery();
+
+            string sql4 = "CREATE TABLE IF NOT EXISTS etc(enableadmin integer, poledisplay integer, printer varchar(50), printerbarcode varchar(50))";
+            SQLiteCommand command4 = new SQLiteCommand(sql4, conn);
+            command4.ExecuteNonQuery();
 
             string sql3 = "SELECT * FROM connection";
             SQLiteCommand command3 = new SQLiteCommand(sql3, conn);
@@ -45,17 +49,61 @@ namespace MBS
 
             try
             {
-                reader.Read();
-                textBox1.Text = reader["user"].ToString();
-                textBox2.Text = reader["password"].ToString();
-                textBox3.Text = reader["host"].ToString();
-                textBox4.Text = reader["database"].ToString();
+                while (reader.Read())
+                {
+                    if (reader["id"].ToString() == "1")
+                    {
+                        textBox1.Text = reader["user"].ToString();
+                        textBox2.Text = reader["password"].ToString();
+                        textBox3.Text = reader["host"].ToString();
+                        textBox4.Text = reader["database"].ToString();
+                    }
+                    else
+                    {
+                        textBox7.Text = reader["password"].ToString();
+                        textBox6.Text = reader["host"].ToString();
+                        textBox5.Text = reader["database"].ToString();
+                        textBox8.Text = reader["user"].ToString();
 
-                reader.Read();
-                textBox8.Text = reader["user"].ToString();
-                textBox7.Text = reader["password"].ToString();
-                textBox6.Text = reader["host"].ToString();
-                textBox5.Text = reader["database"].ToString();
+                    }
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
+
+            string sql5 = "SELECT * FROM etc";
+            SQLiteCommand command5 = new SQLiteCommand(sql5, conn);
+            SQLiteDataReader readeretc = command5.ExecuteReader();
+
+            try
+            {
+                readeretc.Read();
+                if (readeretc["enableadmin"].ToString() == "0")
+                {
+                    checkBox1.Checked = false;
+                }else
+                {
+                    checkBox1.Checked = true;
+                }
+
+                if (readeretc["poledisplay"].ToString() == "0")
+                {
+                    checkBox2.Checked = false;
+                }
+                else
+                {
+                    checkBox2.Checked = true;
+                }
+
+                textBox9.Text = readeretc["printer"].ToString();
+
+                textBox10.Text = readeretc["printerbarcode"].ToString();
+
+                readeretc.Close();
             }
             catch (Exception ex)
             {
@@ -64,6 +112,8 @@ namespace MBS
 
             conn.Close();
         }
+
+        
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -152,5 +202,56 @@ namespace MBS
         {
             sendit("dsudarto@gmail.com");
     }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            SQLiteConnection conn;
+            conn = new SQLiteConnection("Data Source=settings.sqlite;Version=3;");
+            conn.Open();
+            try
+            {
+                SQLiteCommand delete = new SQLiteCommand("DELETE FROM etc", conn);
+                delete.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex.Message);
+            }
+
+            string enableadmin;
+            if (checkBox1.Checked == true)
+            {
+                enableadmin = "1";
+            }
+            else
+            {
+                enableadmin = "0";
+            }
+
+            string poledisplay;
+            if (checkBox1.Checked == true)
+            {
+                poledisplay = "1";
+            }
+            else
+            {
+                poledisplay = "0";
+            }
+
+            string sql = "INSERT INTO etc VALUES ('"+ enableadmin +"', '"+ poledisplay +"','"+ textBox9.Text +"','" + textBox10.Text + "')";
+            SQLiteCommand command = new SQLiteCommand(sql, conn);
+            command.ExecuteNonQuery();
+
+            conn.Close();
+
+            MessageBox.Show("Etc settings saved.");
+
+        }
+
+        private void Settings_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Args.getSQLiteSettings(Args.testConnection());
+        }
     }
 }
