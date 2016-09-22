@@ -31,7 +31,7 @@ namespace MBS
                 this.Show();
                 App.formatDataGridView(dataGridView1);
                 App.DoubleBuffered(dataGridView1, true);
-                App.loadTable(dataGridView1, "SELECT KodeBarang, NamaBarang, Kelompok, Satuan, Jumlah, HargaJual FROM barang WHERE Kelompok = 'PIGEON'");
+                App.loadTable(dataGridView1, "SELECT KodeBarang, NamaBarang, Kelompok, Satuan, HargaJual, Jumlah, Gudang FROM barang WHERE Kelompok = 'PIGEON'");
 
                 this.ActiveControl = textBox1;
 
@@ -46,7 +46,7 @@ namespace MBS
         {
             if (e.KeyCode == Keys.Enter)
             {
-                App.loadTable(dataGridView1, "SELECT KodeBarang, NamaBarang, Kelompok, Satuan, Jumlah, HargaJual FROM barang WHERE NamaBarang LIKE '%" + textBox1.Text + "%'");
+                App.loadTable(dataGridView1, "SELECT KodeBarang, NamaBarang, Kelompok, Satuan, HargaJual, Jumlah, Gudang FROM barang WHERE NamaBarang LIKE '%" + textBox1.Text + "%'");
             }
         }
 
@@ -97,6 +97,12 @@ namespace MBS
         {
             PembelianForm pembelian = new PembelianForm();
             pembelian.ShowDialog();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            GudangForm gudang = new GudangForm();
+            gudang.ShowDialog();
         }
     }
 }

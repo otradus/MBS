@@ -318,5 +318,6 @@ namespace MBS
                 App.executeNonQuery("UPDATE lorisan SET Jumlah = Jumlah + '" + jumlah + "' WHERE KodeBarang = '" + kode + "'");
             }
         }
+
     }
 }
