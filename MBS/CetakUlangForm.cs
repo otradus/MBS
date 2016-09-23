@@ -79,13 +79,9 @@ namespace MBS
             {
                 App.loadTable(dataGridView1, "SELECT * FROM penjualan WHERE Faktur = '" + faktur + "'");
             }
-            else if (radioButton2.Checked == true)
+            else if (radioButton2.Checked == true || radioButton3.Checked == true)
             {
                 App.loadTable(dataGridView1, "SELECT * FROM pembelian WHERE Faktur = '" + faktur + "'");
-            }
-            else
-            {
-
             }
         }
 

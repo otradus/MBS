@@ -27,26 +27,29 @@ namespace MBS
 
         private void button1_Click(object sender, EventArgs e)
         {
-            try
+            if (textBox2.Text != "" || textBox2.Text != "0")
             {
-                string namaBarang = App.executeScalar("SELECT NamaBarang FROM barang WHERE KodeBarang = '" + textBox1.Text + "'").ToString();
-                dataGridView1.Rows.Add(textBox1.Text, namaBarang, textBox2.Text);
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Kode Barang tidak ada!");
-            }
-            finally
-            {
-                textBox1.Text = "";
-                textBox2.Text = "";
-                textBox1.Focus();
+                try
+                {
+                    string namaBarang = App.executeScalar("SELECT NamaBarang FROM barang WHERE KodeBarang = '" + textBox1.Text + "'").ToString();
+                    dataGridView1.Rows.Add(textBox1.Text, namaBarang, textBox2.Text);
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Kode Barang tidak ada!");
+                }
+                finally
+                {
+                    textBox1.Text = "";
+                    textBox2.Text = "";
+                    textBox1.Focus();
+                }
             }
         }
 
         private void textBox1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
+            if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Right)
             {
                 textBox2.Focus();
             }
@@ -163,6 +166,39 @@ namespace MBS
             App.shellCommand("copy c:\\test\\lorisangudang.txt " + Args.printer);
 
             MessageBox.Show("Lorisan Gudang berhasil dicetak.");
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            using (CariBarangForm cari = new CariBarangForm())
+            {
+                cari.ShowDialog();
+
+                textBox1.Text = cari.valueFromCari;
+                textBox2.Focus();
+                // do what ever with result...
+            }
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (Convert.ToInt32(App.executeScalar("SELECT COUNT(*) FROM barang WHERE KodeBarang = '" + textBox1.Text + "'").ToString()) > 0)
+                {
+                    label3.Text = App.executeScalar("SELECT NamaBarang FROM barang WHERE KodeBarang = '" + textBox1.Text + "'").ToString();
+                }
+                else
+                {
+                    label3.Text = "";
+                }
+
+            }
+            catch (Exception)
+            {
+
+            }
+
         }
     }
 }

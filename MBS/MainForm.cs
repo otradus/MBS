@@ -47,6 +47,16 @@ namespace MBS
             if (e.KeyCode == Keys.Enter)
             {
                 App.loadTable(dataGridView1, "SELECT KodeBarang, NamaBarang, Kelompok, Satuan, HargaJual, Jumlah, Gudang FROM barang WHERE NamaBarang LIKE '%" + textBox1.Text + "%'");
+                textBox1.Text = "";
+            }
+
+            if (e.KeyCode == Keys.F8)
+            {
+                if (Args.admin == true)
+                {
+                    Laporan laporan = new Laporan();
+                    laporan.ShowDialog();
+                }
             }
         }
 
@@ -103,6 +113,12 @@ namespace MBS
         {
             GudangForm gudang = new GudangForm();
             gudang.ShowDialog();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            RevisiForm revisi = new RevisiForm();
+            revisi.ShowDialog();
         }
     }
 }

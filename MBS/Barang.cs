@@ -14,7 +14,7 @@ namespace MBS
     {
         public static bool add = false;
         public static bool edit = false;
-
+        Random rnd = new Random();
         public Barang()
         {
             InitializeComponent();
@@ -261,6 +261,15 @@ namespace MBS
                 }
 
             }
+        }
+
+        //TODO: Check for double kode
+        private void label2_MouseDown(object sender, MouseEventArgs e)
+        {
+            textBox2.Text = rnd.Next(999, 9999).ToString();
+            textBox3.Text = textBox2.Text + " ";
+            textBox3.Focus();
+            textBox3.SelectionStart = textBox3.Text.Length;
         }
     }
 }

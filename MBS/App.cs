@@ -284,9 +284,9 @@ namespace MBS
             sb.AppendLine(Convert.ToChar(29) + "VA0");
 
 
-            System.IO.File.WriteAllText(@"C:\test\invoicekaos.txt", sb.ToString());
+            System.IO.File.WriteAllText(@"C:\test\invoicembs.txt", sb.ToString());
 
-            shellCommand("copy c:\\test\\invoicekaos.txt " + Args.printer);
+            shellCommand("copy c:\\test\\invoicembs.txt " + Args.printer);
 
         }
 
@@ -318,9 +318,9 @@ namespace MBS
             sb.AppendLine(Convert.ToChar(29) + "VA0");
 
 
-            System.IO.File.WriteAllText(@"C:\test\invoicekaospembelian.txt", sb.ToString());
+            System.IO.File.WriteAllText(@"C:\test\invoicepembelian.txt", sb.ToString());
 
-            shellCommand("copy c:\\test\\invoicekaospembelian.txt " + Args.printer);
+            shellCommand("copy c:\\test\\invoicepembelian.txt " + Args.printer);
 
         }
 

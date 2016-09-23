@@ -319,5 +319,29 @@ namespace MBS
             }
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (retur == false)
+            {
+                if (dataGridView1.Rows.Count > 0)
+                {
+                    retur = true;
+                    this.BackColor = Color.Maroon;
+                    button1.Text = "!RETUR!";
+                    textBox1.Focus();
+                }
+                else
+                {
+                    MessageBox.Show("Daftar penjualan masih kosong");
+                }
+            }
+            else
+            {
+                retur = false;
+                this.BackColor = default(Color);
+                button1.Text = "RETUR";
+                textBox1.Focus();
+            }
+        }
     }
 }
