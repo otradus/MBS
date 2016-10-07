@@ -491,5 +491,7 @@ namespace MBS
                 calculateTotal();
             }
         }
+
+        //TODO: Pembelian cek perubahan harga ke barang!
     }
 }

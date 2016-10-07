@@ -31,7 +31,7 @@ namespace MBS
                 this.Show();
                 App.formatDataGridView(dataGridView1);
                 App.DoubleBuffered(dataGridView1, true);
-                App.loadTable(dataGridView1, "SELECT KodeBarang, NamaBarang, Kelompok, Satuan, HargaJual, Jumlah, Gudang FROM barang WHERE Kelompok = 'PIGEON'");
+                App.loadTable(dataGridView1, "SELECT KodeBarang, NamaBarang, Kelompok, Satuan, HargaJual, Jumlah, Gudang, Opname FROM barang WHERE Kelompok = 'PIGEON'");
 
                 this.ActiveControl = textBox1;
 
@@ -40,13 +40,30 @@ namespace MBS
             {
                 MessageBox.Show(ex.ToString());
             }
+
+            if (Args.admin == false)
+            {
+                button3.Enabled = false;
+                button4.Enabled = false;
+            }
+
+            this.WindowState = FormWindowState.Maximized;
         }
 
         private void textBox1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                App.loadTable(dataGridView1, "SELECT KodeBarang, NamaBarang, Kelompok, Satuan, HargaJual, Jumlah, Gudang FROM barang WHERE NamaBarang LIKE '%" + textBox1.Text + "%'");
+                int barcodecount = Convert.ToInt32(App.executeScalar("SELECT COUNT(*) FROM barang WHERE KodeBarang = '" + textBox1.Text + "'"));
+                if (barcodecount != 0)
+                {
+                    App.loadTable(dataGridView1, "SELECT KodeBarang, NamaBarang, Kelompok, Satuan, HargaJual, Jumlah, Gudang, Opname FROM barang WHERE KodeBarang = '" + textBox1.Text + "'");
+                }
+                else
+                {
+                    App.loadTable(dataGridView1, "SELECT KodeBarang, NamaBarang, Kelompok, Satuan, HargaJual, Jumlah, Gudang, Opname FROM barang WHERE NamaBarang LIKE '%" + textBox1.Text + "%'");
+                }
+
                 textBox1.Text = "";
             }
 
@@ -119,6 +136,12 @@ namespace MBS
         {
             RevisiForm revisi = new RevisiForm();
             revisi.ShowDialog();
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            OpnameForm opname = new OpnameForm();
+            opname.ShowDialog();
         }
     }
 }

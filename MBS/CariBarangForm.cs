@@ -68,13 +68,16 @@ namespace MBS
         {
             if (e.KeyCode == Keys.Enter)
             {
-                dataGridView1.Rows.Clear();
-                DataTable table = App.executeReader("SELECT KodeBarang, NamaBarang, Jumlah, Satuan, HargaJual FROM barang WHERE NamaBarang LIKE '%" + textBox1.Text + "%'");
-                foreach (DataRow row in table.Rows)
+                if (textBox1.Text != "")
                 {
-                    dataGridView1.Rows.Add(row[0], row[1], row[2], row[3], App.strtomoney(row[4].ToString()));
+                    dataGridView1.Rows.Clear();
+                    DataTable table = App.executeReader("SELECT KodeBarang, NamaBarang, Jumlah, Satuan, HargaJual FROM barang WHERE NamaBarang LIKE '%" + textBox1.Text + "%'");
+                    foreach (DataRow row in table.Rows)
+                    {
+                        dataGridView1.Rows.Add(row[0], row[1], row[2], row[3], App.strtomoney(row[4].ToString()));
+                    }
+                    textBox1.Text = "";
                 }
-                textBox1.Text = "";
             }
 
             if (e.KeyCode == Keys.Down)

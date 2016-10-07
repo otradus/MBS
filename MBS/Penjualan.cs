@@ -29,7 +29,7 @@ namespace MBS
 
             App.formatDataGridView(dataGridView1);
             App.DoubleBuffered(dataGridView1, true);
-            this.ActiveControl = textBox1;
+            ActiveControl = textBox1;
         }
 
         public void inputPenjualan()
@@ -132,13 +132,24 @@ namespace MBS
 
             if (e.KeyCode == Keys.Enter)
             {
-                textBox2.Focus();
-                textBox2.SelectAll();
+                //textBox2.Focus();
+                //textBox2.SelectAll();
+                inputPenjualan();
             }
 
             if (e.KeyCode == Keys.F7)
             {
                 button3.PerformClick();
+            }
+
+            if (e.KeyCode == Keys.Up)
+            {
+                addup();
+            }
+
+            if (e.KeyCode == Keys.Down)
+            {
+                subtractdown();
             }
 
         }
@@ -341,6 +352,46 @@ namespace MBS
                 this.BackColor = default(Color);
                 button1.Text = "RETUR";
                 textBox1.Focus();
+            }
+        }
+
+        private void addup()
+        {
+            int num = Convert.ToInt32(dataGridView1[3, dataGridView1.Rows.Count - 1].Value.ToString());
+            dataGridView1[3, dataGridView1.Rows.Count - 1].Value = (num + 1).ToString();
+
+            decimal harga = Convert.ToDecimal(App.stripMoney(dataGridView1[4, dataGridView1.Rows.Count - 1].Value.ToString()));
+            dataGridView1[5, dataGridView1.Rows.Count - 1].Value = App.decimaltomoney(harga * (num + 1));
+            calculateTotalQty();
+        }
+
+        private void subtractdown()
+        {
+            if (retur != true)
+            {
+
+                int num = Convert.ToInt32(dataGridView1[3, dataGridView1.Rows.Count - 1].Value.ToString());
+
+                if (num > 1)
+                {
+                    dataGridView1[3, dataGridView1.Rows.Count - 1].Value = (num - 1).ToString();
+
+
+                    decimal harga = Convert.ToDecimal(App.stripMoney(dataGridView1[4, dataGridView1.Rows.Count - 1].Value.ToString()));
+                    dataGridView1[5, dataGridView1.Rows.Count - 1].Value = App.decimaltomoney(harga * (num - 1));
+                    calculateTotalQty();
+                }
+            }
+            else
+            {
+                int num = Convert.ToInt32(dataGridView1[3, dataGridView1.Rows.Count - 1].Value.ToString());
+
+                dataGridView1[3, dataGridView1.Rows.Count - 1].Value = (num - 1).ToString();
+
+
+                decimal harga = Convert.ToDecimal(App.stripMoney(dataGridView1[4, dataGridView1.Rows.Count - 1].Value.ToString()));
+                dataGridView1[5, dataGridView1.Rows.Count - 1].Value = App.decimaltomoney(harga * (num - 1));
+                calculateTotalQty();
             }
         }
     }

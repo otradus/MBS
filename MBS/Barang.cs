@@ -15,6 +15,8 @@ namespace MBS
         public static bool add = false;
         public static bool edit = false;
         Random rnd = new Random();
+
+
         public Barang()
         {
             InitializeComponent();
@@ -22,26 +24,38 @@ namespace MBS
 
         private void button2_Click(object sender, EventArgs e)
         {
+            string jumlah, gudang, hargabeli, hargajual, pengambilangudang, batasgudang, opname;
+            jumlah = textBox5.Text != "" ? textBox5.Text : "0";
+            gudang = textBox8.Text != "" ? textBox8.Text : "0";
+            hargabeli = textBox6.Text != "" ? textBox6.Text : "0";
+            hargajual = textBox7.Text != "" ? textBox7.Text : "0";
+            pengambilangudang = textBox9.Text != "" ? textBox9.Text : "0";
+            batasgudang = textBox10.Text != "" ? textBox10.Text : "0";
+            opname = DateTime.Now.ToShortDateString();
+
             if (add == true && edit == false)
             {
                 if (findDuplicate(textBox2.Text) == false)
                 {
                     try
                     {
-                        App.executeNonQuery(string.Format("INSERT INTO barang VALUES('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}')",
+                        App.executeNonQuery(string.Format("INSERT INTO barang VALUES('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}')",
                            textBox2.Text,
                            textBox3.Text,
                            comboBox1.Text,
                            textBox4.Text.ToUpper(),
-                           textBox5.Text,
-                           App.stripMoney(textBox6.Text),
-                           App.stripMoney(textBox7.Text),
-                           textBox8.Text,
-                           textBox9.Text,
-                           textBox10.Text
+                           jumlah,
+                           App.stripMoney(hargabeli),
+                           App.stripMoney(hargajual),
+                           gudang,
+                           pengambilangudang,
+                           batasgudang,
+                           opname
                            ));
                         MessageBox.Show("Barang berhasil dimasukkan");
                         loadBarang();
+                        clearAll();
+
                     }
                     catch (Exception ex)
                     {
@@ -60,21 +74,24 @@ namespace MBS
                 {
                     try
                     {
-                        App.executeNonQuery(string.Format("UPDATE barang SET KodeBarang = '{0}', NamaBarang = '{1}', Kelompok = '{2}', Satuan = '{3}', Jumlah = '{4}', HargaBeli = '{5}', HargaJual = '{6}', Gudang = '{7}', PengambilanGudang = '{8}', BatasGudang = '{9}' WHERE KodeBarang = '" + dataGridView1[0, dataGridView1.CurrentCell.RowIndex].Value.ToString() + "'",
+                        App.executeNonQuery(string.Format("UPDATE barang SET KodeBarang = '{0}', NamaBarang = '{1}', Kelompok = '{2}', Satuan = '{3}', Jumlah = '{4}', HargaBeli = '{5}', HargaJual = '{6}', Gudang = '{7}', PengambilanGudang = '{8}', BatasGudang = '{9}', Opname = '{10}' WHERE KodeBarang = '" + dataGridView1[0, dataGridView1.CurrentCell.RowIndex].Value.ToString() + "'",
                            textBox2.Text,
                            textBox3.Text,
                            comboBox1.Text,
                            textBox4.Text.ToUpper(),
-                           textBox5.Text,
-                           App.stripMoney(textBox6.Text),
-                           App.stripMoney(textBox7.Text),
-                           textBox8.Text,
-                           textBox9.Text,
-                           textBox10.Text
+                           jumlah,
+                           App.stripMoney(hargabeli),
+                           App.stripMoney(hargajual),
+                           gudang,
+                           pengambilangudang,
+                           batasgudang,
+                           opname
                            ));
 
                         MessageBox.Show("Barang berhasil dirubah");
                         loadBarang();
+                        clearAll();
+
                     }
                     catch (Exception ex)
                     {
@@ -86,8 +103,6 @@ namespace MBS
                     MessageBox.Show("KodeBarang yang akan diedit belum ada!");
                 }
             }
-            clearAll();
-
         }
 
         private bool findDuplicate(string kode)
@@ -132,6 +147,9 @@ namespace MBS
             //App.loadTable(dataGridView1, "SELECT * FROM Barang");
             App.loadComboBox(comboBox1, "SELECT * FROM kelompok");
 
+            textBox2.CharacterCasing = CharacterCasing.Upper;
+            textBox4.CharacterCasing = CharacterCasing.Upper;
+
             this.ActiveControl = textBox1;
         }
 
@@ -145,7 +163,14 @@ namespace MBS
 
         private void loadBarang()
         {
-            App.loadTable(dataGridView1, "SELECT * FROM BARANG WHERE NamaBarang LIKE '%" + textBox1.Text + "%'");
+            if (textBox1.Text != "")
+            {
+                App.loadTable(dataGridView1, "SELECT * FROM BARANG WHERE NamaBarang LIKE '%" + textBox1.Text + "%'");
+            }
+            else
+            {
+                dataGridView1.DataSource = null;
+            }
         }
 
         private void button6_Click(object sender, EventArgs e)

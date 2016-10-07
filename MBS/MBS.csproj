@@ -104,6 +104,12 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="OpnameForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OpnameForm.Designer.cs">
+      <DependentUpon>OpnameForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="PembelianForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -159,6 +165,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OpnameForm.resx">
+      <DependentUpon>OpnameForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PembelianForm.resx">
       <DependentUpon>PembelianForm.cs</DependentUpon>

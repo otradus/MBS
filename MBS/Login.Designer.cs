@@ -66,6 +66,8 @@
             this.ClientSize = new System.Drawing.Size(537, 435);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.pictureBox1);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "Login";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Login";
