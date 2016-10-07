@@ -73,21 +73,35 @@ namespace MBS
 
                         if (toko == true)
                         {
-                            dataGridView1[2, i].Value = Convert.ToString(Convert.ToInt32(dataGridView1[2, i].Value) + jumlah);
+                            if (jumlah == 1)
+                            {
+                                dataGridView1[2, i].Value = Convert.ToString(Convert.ToInt32(dataGridView1[2, i].Value) + jumlah);
+                            }
+                            else
+                            {
+                                dataGridView1[2, i].Value = jumlah.ToString();
+                            }
 
                             int jumlahbarang;
                             jumlahbarang = Convert.ToInt32(App.executeScalar("SELECT Jumlah FROM barang WHERE KodeBarang = '" + textBox1.Text + "'"));
-                            int selisih = Convert.ToInt32(dataGridView1[2, i].Value) + jumlah - jumlahbarang;
+                            int selisih = Convert.ToInt32(dataGridView1[2, i].Value) - jumlahbarang;
 
                             dataGridView1[3, i].Value = Convert.ToString(selisih);
                         }
                         else
                         {
-                            dataGridView1[4, i].Value = Convert.ToString(Convert.ToInt32(dataGridView1[4, i].Value) + jumlah);
+                            if (jumlah == 1)
+                            {
+                                dataGridView1[4, i].Value = Convert.ToString(Convert.ToInt32(dataGridView1[4, i].Value) + jumlah);
+                            }
+                            else
+                            {
+                                dataGridView1[4, i].Value = jumlah.ToString();
+                            }
 
                             int jumlahgudang;
                             jumlahgudang = Convert.ToInt32(App.executeScalar("SELECT Gudang FROM barang WHERE KodeBarang = '" + textBox1.Text + "'"));
-                            int selisih = Convert.ToInt32(dataGridView1[4, i].Value) + jumlah - jumlahgudang;
+                            int selisih = Convert.ToInt32(dataGridView1[4, i].Value) - jumlahgudang;
 
                             dataGridView1[5, i].Value = Convert.ToString(selisih);
 
@@ -178,6 +192,12 @@ namespace MBS
             {
                 dataGridView1.Rows.RemoveAt(dataGridView1.CurrentRow.Index);
             }
+
+            if (e.KeyCode == Keys.Enter)
+            {
+                textBox1.Text = dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString();
+                textBox2.Focus();
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -201,13 +221,19 @@ namespace MBS
                 }
                 else if (jumlah > 0 && gudang > 0)
                 {
-                    App.executeNonQuery("UPDATE barang SET Jumlah = '" + jumlah + "', Gudang = '"+ gudang +"', Opname = '" + tanggal + "' WHERE Kodebarang = '" + dataGridView1[0, i].Value.ToString() + "'");
+                    App.executeNonQuery("UPDATE barang SET Jumlah = '" + jumlah + "', Gudang = '" + gudang + "', Opname = '" + tanggal + "' WHERE Kodebarang = '" + dataGridView1[0, i].Value.ToString() + "'");
 
                 }
             }
             App.executeNonQuery("DELETE FROM opname");
 
             MessageBox.Show("Opname berhasil dimasukkan");
+        }
+
+        private void dataGridView1_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            textBox1.Text = dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString();
+            textBox2.Focus();
         }
     }
 }

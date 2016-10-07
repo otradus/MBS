@@ -288,7 +288,7 @@ namespace MBS
 
                         addLorisan(kode, nama, jumlah);
 
-                        total += App.cDouble(App.stripMoney(dataGridView1[4, i].Value.ToString()));
+                        total += App.cDouble(App.stripMoney(dataGridView1[5, i].Value.ToString()));
                     }
 
                     cmd.CommandText = "INSERT INTO penjualancompact SET Tanggal='" + tgl.ToShortDateString() + "', Faktur='" + lastfaktur + "', User='" + user + "',Total='" + total + "',Laba='" + labatotal + "', Bayar='0'";
