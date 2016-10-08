@@ -34,7 +34,6 @@ namespace MBS
             }
         }
 
-        //TODO: PembelianCompact laba dikurangin
 
         private void dataGridView2_KeyDown(object sender, KeyEventArgs e)
         {
@@ -50,7 +49,9 @@ namespace MBS
 
                     MessageBox.Show("Barang sudah dibatalkan dari penjualan");
 
-                    
+                    double lababarang = Convert.ToDouble(App.executeScalar("SELECT HargaJual-HargaBeli FROM barang WHERE KodeBarang = '" + dataGridView2[0, dataGridView2.CurrentRow.Index].Value.ToString() + "'"));
+                    double lababarangjumlah = lababarang * Convert.ToInt32(dataGridView2[2, dataGridView2.CurrentRow.Index].Value.ToString());
+
 
                     dataGridView2.Rows.Clear();
 
@@ -65,7 +66,8 @@ namespace MBS
                         total += Convert.ToDouble(row[4].ToString());
                     }
 
-                    App.executeNonQuery("UPDATE penjualancompact SET Total = '" + total.ToString() + "' WHERE Faktur = '" + faktur + "'");
+                    
+                    App.executeNonQuery("UPDATE penjualancompact SET Total = '" + total.ToString() + "', Laba = Laba - '"+ lababarangjumlah.ToString() +"' WHERE Faktur = '" + faktur + "'");
 
                     label1.Text = "Faktur: " + faktur;
                     label2.Text = "Total: " + App.strtomoney(total.ToString());

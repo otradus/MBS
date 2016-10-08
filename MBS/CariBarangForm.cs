@@ -71,10 +71,10 @@ namespace MBS
                 if (textBox1.Text != "")
                 {
                     dataGridView1.Rows.Clear();
-                    DataTable table = App.executeReader("SELECT KodeBarang, NamaBarang, Jumlah, Satuan, HargaJual FROM barang WHERE NamaBarang LIKE '%" + textBox1.Text + "%'");
+                    DataTable table = App.executeReader("SELECT KodeBarang, NamaBarang, Jumlah, Satuan, HargaJual, Gudang FROM barang WHERE NamaBarang LIKE '%" + textBox1.Text + "%'");
                     foreach (DataRow row in table.Rows)
                     {
-                        dataGridView1.Rows.Add(row[0], row[1], row[2], row[3], App.strtomoney(row[4].ToString()));
+                        dataGridView1.Rows.Add(row[0], row[1], row[2], row[3], App.strtomoney(row[4].ToString()), row[5]);
                     }
                     textBox1.Text = "";
                 }

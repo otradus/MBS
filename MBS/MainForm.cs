@@ -94,7 +94,7 @@ namespace MBS
             CetakUlangForm cetakulang = new CetakUlangForm();
             cetakulang.ShowDialog();
         }
-        
+
         public void cekSqlite()
         {
             if (!System.IO.File.Exists("settings.sqlite"))
@@ -142,6 +142,65 @@ namespace MBS
         {
             OpnameForm opname = new OpnameForm();
             opname.ShowDialog();
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("Tampilkan semua barang? PERHATIAN: Harap tunggu beberapa waktu!", "Tampilkan semua barang", MessageBoxButtons.OKCancel);
+            if (result == DialogResult.OK)
+            {
+                App.loadTable(dataGridView1, "SELECT KodeBarang, NamaBarang, Kelompok, Satuan, HargaJual, Jumlah, Gudang, Opname FROM barang");
+            }
+        }
+
+        private void dataGridView1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                if (Args.admin == true)
+                {
+                    DialogResult result = MessageBox.Show("Hapus barang ini? " + dataGridView1[1, dataGridView1.CurrentRow.Index].Value.ToString(), "PERHATIAN", MessageBoxButtons.OKCancel);
+                    if (result == DialogResult.OK)
+                    {
+                        App.executeNonQuery("DELETE FROM barang WHERE KodeBarang = '" + dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString() + "'");
+                        dataGridView1.Rows.RemoveAt(dataGridView1.CurrentRow.Index);
+                        MessageBox.Show("Barang berhasil dihapus");
+                    }
+                }
+            }
+
+            if (e.KeyCode == Keys.F9)
+            {
+                string kode, nama, harga;
+                kode = dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString();
+                nama = dataGridView1[1, dataGridView1.CurrentRow.Index].Value.ToString();
+                harga = dataGridView1[4, dataGridView1.CurrentRow.Index].Value.ToString();
+
+                BarcodeForm barcode = new BarcodeForm(kode, nama, harga);
+                barcode.ShowDialog();
+            }
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            LorisanForm lorisan = new LorisanForm();
+            lorisan.ShowDialog();
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            //PRINT INVOICE
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("Kode Barang;Nama Barang;Kelompok;Satuan;Harga Jual;Toko;Gudang;Opname;");
+            for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            {
+                        sb.AppendLine(dataGridView1[0, i].Value.ToString() + ";" + dataGridView1[1, i].Value.ToString() + ";" + dataGridView1[2, i].Value.ToString() + ";" + dataGridView1[3, i].Value.ToString() + ";" + dataGridView1[4, i].Value.ToString() + ";" + dataGridView1[5, i].Value.ToString() + ";" + dataGridView1[6, i].Value.ToString() + ";" + dataGridView1[7, i].Value.ToString() + ";");
+            }
+
+            System.IO.File.WriteAllText(@"C:\test\csvbaby.csv", sb.ToString());
+
+            App.shellCommand("excel c:\\test\\csvbaby.csv");
+
         }
     }
 }

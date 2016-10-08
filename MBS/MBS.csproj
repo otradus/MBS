@@ -35,6 +35,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Shwz-Disney-Mickey-mouse.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="MySql.Data, Version=6.9.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
     <Reference Include="System" />
@@ -61,6 +64,12 @@
     </Compile>
     <Compile Include="Barang.Designer.cs">
       <DependentUpon>Barang.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BarcodeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BarcodeForm.Designer.cs">
+      <DependentUpon>BarcodeForm.cs</DependentUpon>
     </Compile>
     <Compile Include="CariBarangForm.cs">
       <SubType>Form</SubType>
@@ -97,6 +106,12 @@
     </Compile>
     <Compile Include="Login.Designer.cs">
       <DependentUpon>Login.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LorisanForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LorisanForm.Designer.cs">
+      <DependentUpon>LorisanForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -145,6 +160,9 @@
     <EmbeddedResource Include="Barang.resx">
       <DependentUpon>Barang.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="BarcodeForm.resx">
+      <DependentUpon>BarcodeForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CariBarangForm.resx">
       <DependentUpon>CariBarangForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -162,6 +180,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Login.resx">
       <DependentUpon>Login.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LorisanForm.resx">
+      <DependentUpon>LorisanForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -236,6 +257,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Sign In.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Shwz-Disney-Mickey-mouse.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.102.0\build\net451\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.102.0\build\net451\System.Data.SQLite.Core.targets')" />

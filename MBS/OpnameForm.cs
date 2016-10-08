@@ -70,38 +70,45 @@ namespace MBS
                     if (textBox1.Text == dataGridView1[0, i].Value.ToString())
                     {
                         newitem = false;
+                        int jumlahbarang;
+                        int jumlahgudang;
+                        int selisih;
 
                         if (toko == true)
                         {
+                            jumlahbarang = Convert.ToInt32(App.executeScalar("SELECT Jumlah FROM barang WHERE KodeBarang = '" + textBox1.Text + "'"));
+
                             if (jumlah == 1)
                             {
                                 dataGridView1[2, i].Value = Convert.ToString(Convert.ToInt32(dataGridView1[2, i].Value) + jumlah);
+                                selisih = Convert.ToInt32(dataGridView1[2, i].Value) - jumlahbarang;
                             }
                             else
                             {
                                 dataGridView1[2, i].Value = jumlah.ToString();
+                                selisih = jumlah - jumlahbarang;
                             }
 
-                            int jumlahbarang;
-                            jumlahbarang = Convert.ToInt32(App.executeScalar("SELECT Jumlah FROM barang WHERE KodeBarang = '" + textBox1.Text + "'"));
-                            int selisih = Convert.ToInt32(dataGridView1[2, i].Value) - jumlahbarang;
-
+                            
                             dataGridView1[3, i].Value = Convert.ToString(selisih);
                         }
                         else
                         {
+                            jumlahgudang = Convert.ToInt32(App.executeScalar("SELECT Gudang FROM barang WHERE KodeBarang = '" + textBox1.Text + "'"));
+
                             if (jumlah == 1)
                             {
                                 dataGridView1[4, i].Value = Convert.ToString(Convert.ToInt32(dataGridView1[4, i].Value) + jumlah);
+                                selisih = Convert.ToInt32(dataGridView1[4, i].Value) - jumlahgudang;
+
                             }
                             else
                             {
                                 dataGridView1[4, i].Value = jumlah.ToString();
+                                selisih = jumlah - jumlahgudang;
+
                             }
 
-                            int jumlahgudang;
-                            jumlahgudang = Convert.ToInt32(App.executeScalar("SELECT Gudang FROM barang WHERE KodeBarang = '" + textBox1.Text + "'"));
-                            int selisih = Convert.ToInt32(dataGridView1[4, i].Value) - jumlahgudang;
 
                             dataGridView1[5, i].Value = Convert.ToString(selisih);
 
@@ -116,14 +123,27 @@ namespace MBS
                     {
                         int jumlahbarang;
                         jumlahbarang = Convert.ToInt32(App.executeScalar("SELECT Jumlah FROM barang WHERE KodeBarang = '" + textBox1.Text + "'"));
-                        dataGridView1.Rows.Add(textBox1.Text, label3.Text, jumlah.ToString(), Convert.ToString((jumlahbarang - 1) * -1), "0", "0");
+                        if (jumlah == 1)
+                        {
+                            dataGridView1.Rows.Add(textBox1.Text, label3.Text, jumlah.ToString(), Convert.ToString((jumlahbarang - 1) * -1), "0", "0");
+                        }
+                        else
+                        {
+                            dataGridView1.Rows.Add(textBox1.Text, label3.Text, jumlah.ToString(), Convert.ToString(jumlah - jumlahbarang), "0", "0");
+                        }
                     }
                     else
                     {
                         int jumlahgudang;
                         jumlahgudang = Convert.ToInt32(App.executeScalar("SELECT Gudang FROM barang WHERE KodeBarang = '" + textBox1.Text + "'"));
-                        dataGridView1.Rows.Add(textBox1.Text, label3.Text, "0", "0", jumlah.ToString(), Convert.ToString((jumlahgudang - 1) * -1));
-
+                        if (jumlah == 1)
+                        {
+                            dataGridView1.Rows.Add(textBox1.Text, label3.Text, "0", "0", jumlah.ToString(), Convert.ToString((jumlahgudang - 1) * -1));
+                        }
+                        else
+                        {
+                            dataGridView1.Rows.Add(textBox1.Text, label3.Text, "0", "0", jumlah.ToString(), Convert.ToString(jumlah - jumlahgudang));
+                        }
                     }
                 }
 
@@ -227,13 +247,56 @@ namespace MBS
             }
             App.executeNonQuery("DELETE FROM opname");
 
+            printOpname();
+
             MessageBox.Show("Opname berhasil dimasukkan");
+            Close();
         }
+
+        private void printOpname()
+        {
+                DateTime tgl = DateTime.Now;
+
+                //PRINT INVOICE
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine(Convert.ToChar(27) + "a1" + Convert.ToChar(27) + "!4" + "OPNAME");
+                sb.AppendLine("Baby");
+                sb.AppendLine(Convert.ToChar(27) + "@");
+                sb.AppendLine("Tanggal: " + tgl.ToShortDateString() + " Jam: " + tgl.ToShortTimeString());
+                sb.AppendLine("========================================");
+
+
+            for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            {
+                sb.AppendLine(dataGridView1[0, i].Value.ToString() + " " + dataGridView1[1, i].Value.ToString());
+                if (dataGridView1[2,i].Value.ToString() != "0" && dataGridView1[3,i].Value.ToString() != "0")
+                {
+                    sb.AppendLine("     Toko: " + dataGridView1[2, i].Value.ToString() + " | Selisih: " + dataGridView1[3, i].Value.ToString());
+                }
+                if (dataGridView1[4, i].Value.ToString() != "0" && dataGridView1[5, i].Value.ToString() != "0")
+                {
+                    sb.AppendLine("   Gudang: " + dataGridView1[4, i].Value.ToString() + " | Selisih: " + dataGridView1[5, i].Value.ToString());
+                }
+
+            }
+
+                sb.AppendLine("----------------------------------------");
+                sb.AppendLine("");
+
+                sb.AppendLine(Convert.ToChar(29) + "VA0");
+
+
+                System.IO.File.WriteAllText(@"C:\test\opnamebaby.txt", sb.ToString());
+
+                App.shellCommand("copy c:\\test\\opnamebaby.txt " + Args.printer);
+
+        
+    }
 
         private void dataGridView1_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             textBox1.Text = dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString();
-            textBox2.Focus();
+            //textBox2.Focus();
         }
     }
 }
