@@ -43,6 +43,10 @@ namespace MBS
             SQLiteCommand command4 = new SQLiteCommand(sql4, conn);
             command4.ExecuteNonQuery();
 
+            string sql_email = "CREATE TABLE IF NOT EXISTS email(username varchar(50), password varchar(50), recipient varchar(50))";
+            SQLiteCommand command_email = new SQLiteCommand(sql_email, conn);
+            command_email.ExecuteNonQuery();
+
             string sql3 = "SELECT * FROM connection";
             SQLiteCommand command3 = new SQLiteCommand(sql3, conn);
             SQLiteDataReader reader = command3.ExecuteReader();
@@ -104,6 +108,26 @@ namespace MBS
                 textBox10.Text = readeretc["printerbarcode"].ToString();
 
                 readeretc.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
+
+            string sql6 = "SELECT * FROM email";
+            SQLiteCommand command6 = new SQLiteCommand(sql6, conn);
+            SQLiteDataReader readeremail = command6.ExecuteReader();
+
+            try
+            {
+                readeremail.Read();
+ 
+                textBox11.Text = Encryption.Decrypt(readeremail["username"].ToString(),"123");
+                textBox12.Text = Encryption.Decrypt(readeremail["password"].ToString(), "123");
+                textBox13.Text = Encryption.Decrypt(readeremail["recipient"].ToString(), "123");
+
+                readeremail.Close();
             }
             catch (Exception ex)
             {
@@ -252,6 +276,36 @@ namespace MBS
         private void Settings_FormClosed(object sender, FormClosedEventArgs e)
         {
             Args.getSQLiteSettings(Args.testConnection());
+        }
+
+        private void button3_Click_1(object sender, EventArgs e)
+        {
+            SQLiteConnection conn;
+            conn = new SQLiteConnection("Data Source=settings.sqlite;Version=3;");
+            conn.Open();
+            try
+            {
+                SQLiteCommand delete = new SQLiteCommand("DELETE FROM email", conn);
+                delete.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex.Message);
+            }
+
+            string username, password, recipient;
+            username = Encryption.Encrypt(textBox11.Text, "123");
+            password = Encryption.Encrypt(textBox12.Text, "123");
+            recipient = Encryption.Encrypt(textBox13.Text, "123");
+
+            string sql = "INSERT INTO email VALUES ('" + username + "', '" + password + "','" + recipient + "')";
+            SQLiteCommand command = new SQLiteCommand(sql, conn);
+            command.ExecuteNonQuery();
+
+            conn.Close();
+
+            MessageBox.Show("Email settings saved.");
         }
     }
 }

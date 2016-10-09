@@ -16,6 +16,8 @@ namespace MBS
         public static string printer;
         public static string printerbarcode;
 
+        public static string emailusername, emailpassword, emailrecipient;
+
         public static string username, password, host, database;
 
         public static void getSQLiteSettings(bool local1)
@@ -26,6 +28,7 @@ namespace MBS
                 poledisplay = getPoleDisplay();
                 printer = getPrinter();
                 printerbarcode = getPrinterBarcode();
+                getEmailSettings();
 
                 getMySQLConnection(local1);
 
@@ -171,6 +174,27 @@ namespace MBS
             conn.Close();
 
             return result;
+        }
+
+        public static void getEmailSettings()
+        {
+            SQLiteConnection conn = new SQLiteConnection("Data Source=settings.sqlite;Version=3;");
+            conn.Open();
+
+            string sql = "SELECT * FROM email";
+            SQLiteCommand command = new SQLiteCommand(sql, conn);
+            SQLiteDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                emailusername = Encryption.Decrypt(reader["username"].ToString(),"123");
+                emailpassword = Encryption.Decrypt(reader["password"].ToString(),"123");
+                emailrecipient = Encryption.Decrypt(reader["recipient"].ToString(),"123");
+            }
+
+            reader.Close();
+            conn.Close();
+
         }
 
 

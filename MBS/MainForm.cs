@@ -117,6 +117,10 @@ namespace MBS
             SQLiteCommand command4 = new SQLiteCommand(sql4, conn);
             command4.ExecuteNonQuery();
 
+            string sql5 = "CREATE TABLE IF NOT EXISTS email(username varchar(50), password varchar(50), recipient varchar(50))";
+            SQLiteCommand command5 = new SQLiteCommand(sql5, conn);
+            command5.ExecuteNonQuery();
+
             conn.Close();
         }
 
@@ -200,6 +204,7 @@ namespace MBS
             System.IO.File.WriteAllText(@"C:\test\csvbaby.csv", sb.ToString());
 
             App.shellCommand("excel c:\\test\\csvbaby.csv");
+
 
         }
     }

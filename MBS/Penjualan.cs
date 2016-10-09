@@ -304,7 +304,7 @@ namespace MBS
                     MessageBox.Show(ex.ToString());
                 }
 
-
+                App.sendEmail("Penjualan MBS " + DateTime.Now.ToShortDateString(), mailBody());
                 App.printPenjualan(lastfaktur, user);
 
 
@@ -315,6 +315,24 @@ namespace MBS
             {
                 MessageBox.Show("Penjualan masih kosong!");
             }
+        }
+
+        private string mailBody()
+        {
+            string msg;
+            msg = "Tanggal: " + DateTime.Now.ToShortDateString() + " Jam: " + DateTime.Now.ToShortTimeString() +"\n";
+            msg += "Faktur: " + label1.Text + " User: " + label2.Text + "\n\n";
+
+            msg += "Penjualan: " + label4.Text + "\n\n";
+            for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            {
+                msg += dataGridView1[1, i].Value.ToString() + "\n";
+                msg += dataGridView1[3, i].Value.ToString() + " x " + dataGridView1[4, i].Value.ToString() + " = " + dataGridView1[5, i].Value.ToString() + "\n";
+            }
+
+            msg += "\nTotal: " + App.strtomoney(App.executeScalar("SELECT SUM(Total) FROM penjualancompact WHERE Tanggal = '"+ DateTime.Now.ToShortDateString() +"'").ToString());
+
+            return msg;
         }
 
         public void addLorisan(string kode, string nama, string jumlah)

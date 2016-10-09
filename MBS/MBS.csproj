@@ -83,6 +83,7 @@
     <Compile Include="CetakUlangForm.designer.cs">
       <DependentUpon>CetakUlangForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Encryption.cs" />
     <Compile Include="GudangForm.cs">
       <SubType>Form</SubType>
     </Compile>
