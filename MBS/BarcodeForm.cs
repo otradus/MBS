@@ -19,7 +19,7 @@ namespace MBS
         {
             kode = kode1;
             nama = nama1;
-            harga = harga1;
+            harga = App.strtomoney(harga1);
             InitializeComponent();
         }
 

@@ -24,7 +24,7 @@ namespace MBS
 
         private void button2_Click(object sender, EventArgs e)
         {
-            string jumlah, gudang, hargabeli, hargajual, pengambilangudang, batasgudang, opname;
+            string jumlah, gudang, hargabeli, hargajual, pengambilangudang, batasgudang, opname, loris;
             jumlah = textBox5.Text != "" ? textBox5.Text : "0";
             gudang = textBox8.Text != "" ? textBox8.Text : "0";
             hargabeli = textBox6.Text != "" ? textBox6.Text : "0";
@@ -32,6 +32,7 @@ namespace MBS
             pengambilangudang = textBox9.Text != "" ? textBox9.Text : "0";
             batasgudang = textBox10.Text != "" ? textBox10.Text : "0";
             opname = DateTime.Now.ToShortDateString();
+            loris = checkBox1.Checked ? "1" : "0";
 
             if (add == true && edit == false)
             {
@@ -39,7 +40,7 @@ namespace MBS
                 {
                     try
                     {
-                        App.executeNonQuery(string.Format("INSERT INTO barang VALUES('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}')",
+                        App.executeNonQuery(string.Format("INSERT INTO barang VALUES('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}')",
                            textBox2.Text,
                            textBox3.Text,
                            comboBox1.Text,
@@ -50,7 +51,8 @@ namespace MBS
                            gudang,
                            pengambilangudang,
                            batasgudang,
-                           opname
+                           opname,
+                           loris
                            ));
                         MessageBox.Show("Barang berhasil dimasukkan");
                         loadBarang();
@@ -74,7 +76,7 @@ namespace MBS
                 {
                     try
                     {
-                        App.executeNonQuery(string.Format("UPDATE barang SET KodeBarang = '{0}', NamaBarang = '{1}', Kelompok = '{2}', Satuan = '{3}', Jumlah = '{4}', HargaBeli = '{5}', HargaJual = '{6}', Gudang = '{7}', PengambilanGudang = '{8}', BatasGudang = '{9}', Opname = '{10}' WHERE KodeBarang = '" + dataGridView1[0, dataGridView1.CurrentCell.RowIndex].Value.ToString() + "'",
+                        App.executeNonQuery(string.Format("UPDATE barang SET KodeBarang = '{0}', NamaBarang = '{1}', Kelompok = '{2}', Satuan = '{3}', Jumlah = '{4}', HargaBeli = '{5}', HargaJual = '{6}', Gudang = '{7}', PengambilanGudang = '{8}', BatasGudang = '{9}', Opname = '{10}', Lorisan = '{11}' WHERE KodeBarang = '" + dataGridView1[0, dataGridView1.CurrentCell.RowIndex].Value.ToString() + "'",
                            textBox2.Text,
                            textBox3.Text,
                            comboBox1.Text,
@@ -85,7 +87,8 @@ namespace MBS
                            gudang,
                            pengambilangudang,
                            batasgudang,
-                           opname
+                           opname,
+                           loris
                            ));
 
                         MessageBox.Show("Barang berhasil dirubah");
@@ -207,6 +210,15 @@ namespace MBS
                 textBox8.Text = dataGridView1[7, col].Value.ToString();
                 textBox9.Text = dataGridView1[8, col].Value.ToString();
                 textBox10.Text = dataGridView1[9, col].Value.ToString();
+
+                if (dataGridView1[11, col].Value.ToString() == "1")
+                {
+                    checkBox1.Checked = true;
+                }
+                else
+                {
+                    checkBox1.Checked = false;
+                }
             }
         }
 

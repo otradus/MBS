@@ -320,7 +320,7 @@ namespace MBS
         public void addLorisan(string kode, string nama, string jumlah)
         {
             DateTime tgl = DateTime.Now;
-            if (App.executeScalar("SELECT Jumlah FROM lorisan WHERE NamaBarang = '" + kode + "' LIMIT 1") == null)
+            if (Convert.ToInt32(App.executeScalar("SELECT COUNT(*) FROM lorisan WHERE KodeBarang = '" + kode + "'")) == 0)
             {
                 App.executeNonQuery("INSERT INTO lorisan SET Tanggal = '" + tgl.ToShortDateString() + "', KodeBarang = '" + kode + "', NamaBarang = '" + nama + "', Jumlah = '" + jumlah + "'");
             }

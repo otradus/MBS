@@ -44,23 +44,31 @@ namespace MBS
             sb.AppendLine("========================================");
 
             int jumlah, lorisan;
+            bool loris;
 
             for (int i = 0; i < dataGridView1.Rows.Count; i++)
             {
-                jumlah = Convert.ToInt32(App.executeScalar("SELECT Jumlah FROM barang WHERE KodeBarang = '"+ dataGridView1[1, i].Value.ToString() +"'"));
-                lorisan = Convert.ToInt32(dataGridView1[3, i].Value.ToString());
+                loris = Convert.ToBoolean(App.executeScalar("SELECT Lorisan FROM barang WHERE KodeBarang = '" + dataGridView1[1, i].Value.ToString() + "'"));
 
-                if (jumlah > 0)
+                if (loris == true)
                 {
-                    if (jumlah >= lorisan)
+                    jumlah = Convert.ToInt32(App.executeScalar("SELECT Jumlah FROM barang WHERE KodeBarang = '" + dataGridView1[1, i].Value.ToString() + "'"));
+                    lorisan = Convert.ToInt32(dataGridView1[3, i].Value.ToString());
+
+                    if (jumlah > 0)
                     {
-                        sb.AppendLine(dataGridView1[2, i].Value.ToString() + " ... " + lorisan.ToString());
-                    }
-                    else
-                    {
-                        sb.AppendLine(dataGridView1[2, i].Value.ToString() + " ... " + jumlah.ToString());
+                        if (jumlah >= lorisan)
+                        {
+                            sb.AppendLine(dataGridView1[2, i].Value.ToString() + " ... " + lorisan.ToString());
+                        }
+                        else
+                        {
+                            sb.AppendLine(dataGridView1[2, i].Value.ToString() + " ... " + jumlah.ToString());
+                        }
                     }
                 }
+
+                
             }
 
             sb.AppendLine("----------------------------------------");

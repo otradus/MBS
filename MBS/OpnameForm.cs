@@ -35,6 +35,7 @@ namespace MBS
             }
 
             loadOpname();
+            colorTable();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -64,6 +65,7 @@ namespace MBS
                 }
 
 
+
                 bool newitem = true;
                 for (int i = 0; i < dataGridView1.RowCount; i++)
                 {
@@ -89,8 +91,14 @@ namespace MBS
                                 selisih = jumlah - jumlahbarang;
                             }
 
-                            
-                            dataGridView1[3, i].Value = Convert.ToString(selisih);
+                            if (selisih > 0)
+                            {
+                                dataGridView1[3, i].Value = "+" + Convert.ToString(selisih);
+                            }
+                            else
+                            {
+                                dataGridView1[3, i].Value = Convert.ToString(selisih);
+                            }
                         }
                         else
                         {
@@ -109,8 +117,14 @@ namespace MBS
 
                             }
 
-
-                            dataGridView1[5, i].Value = Convert.ToString(selisih);
+                            if (selisih > 0)
+                            {
+                                dataGridView1[5, i].Value = "+" + Convert.ToString(selisih);
+                            }
+                            else
+                            {
+                                dataGridView1[5, i].Value = Convert.ToString(selisih);
+                            }
 
                         }
                     }
@@ -148,14 +162,71 @@ namespace MBS
                 }
 
 
+                dataGridView1.ClearSelection();
+                selectLastInput(textBox1.Text);
+
+
                 textBox1.Text = "";
                 textBox2.Text = "";
 
-                dataGridView1.ClearSelection();
+                colorTable();
 
                 textBox1.Focus();
 
             }
+        }
+
+        private void colorTable()
+        {
+            string jumlah, gudang;
+            int selisihjumlah, selisihgudang;
+            for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            {
+                jumlah = dataGridView1[2, i].Value.ToString();
+                gudang = dataGridView1[4, i].Value.ToString();
+                selisihjumlah = Convert.ToInt32(dataGridView1[3, i].Value.ToString());
+                selisihgudang = Convert.ToInt32(dataGridView1[5, i].Value.ToString());
+
+                if (jumlah == "0" && selisihjumlah == 0)
+                {
+
+                    dataGridView1[2, i].Style.ForeColor = Color.GhostWhite;
+                    dataGridView1[3, i].Style.ForeColor = Color.GhostWhite;
+                }
+
+                if (gudang == "0" && selisihgudang == 0)
+                {
+
+                    dataGridView1[4, i].Style.ForeColor = Color.GhostWhite;
+                    dataGridView1[5, i].Style.ForeColor = Color.GhostWhite;
+                }
+
+
+                if (selisihjumlah == 0)
+                {
+                    dataGridView1[3, i].Style.BackColor = Color.LightGreen;
+                }
+                else if (selisihjumlah > 0)
+                {
+                    dataGridView1[3, i].Style.BackColor = Color.LightBlue;
+                }
+                else
+                {
+                    dataGridView1[3, i].Style.BackColor = Color.Pink;
+                }
+            }
+        }
+
+        private void selectLastInput(string kode)
+        {
+            for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            {
+                if (dataGridView1[0, i].Value.ToString() == kode)
+                {
+                    dataGridView1.Rows[i].Selected = true;
+                }
+            }
+
         }
 
         private void textBox1_KeyDown(object sender, KeyEventArgs e)
@@ -255,21 +326,21 @@ namespace MBS
 
         private void printOpname()
         {
-                DateTime tgl = DateTime.Now;
+            DateTime tgl = DateTime.Now;
 
-                //PRINT INVOICE
-                StringBuilder sb = new StringBuilder();
-                sb.AppendLine(Convert.ToChar(27) + "a1" + Convert.ToChar(27) + "!4" + "OPNAME");
-                sb.AppendLine("Baby");
-                sb.AppendLine(Convert.ToChar(27) + "@");
-                sb.AppendLine("Tanggal: " + tgl.ToShortDateString() + " Jam: " + tgl.ToShortTimeString());
-                sb.AppendLine("========================================");
+            //PRINT INVOICE
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine(Convert.ToChar(27) + "a1" + Convert.ToChar(27) + "!4" + "OPNAME");
+            sb.AppendLine("Baby");
+            sb.AppendLine(Convert.ToChar(27) + "@");
+            sb.AppendLine("Tanggal: " + tgl.ToShortDateString() + " Jam: " + tgl.ToShortTimeString());
+            sb.AppendLine("========================================");
 
 
             for (int i = 0; i < dataGridView1.Rows.Count; i++)
             {
                 sb.AppendLine(dataGridView1[0, i].Value.ToString() + " " + dataGridView1[1, i].Value.ToString());
-                if (dataGridView1[2,i].Value.ToString() != "0" && dataGridView1[3,i].Value.ToString() != "0")
+                if (dataGridView1[2, i].Value.ToString() != "0" && dataGridView1[3, i].Value.ToString() != "0")
                 {
                     sb.AppendLine("     Toko: " + dataGridView1[2, i].Value.ToString() + " | Selisih: " + dataGridView1[3, i].Value.ToString());
                 }
@@ -280,18 +351,18 @@ namespace MBS
 
             }
 
-                sb.AppendLine("----------------------------------------");
-                sb.AppendLine("");
+            sb.AppendLine("----------------------------------------");
+            sb.AppendLine("");
 
-                sb.AppendLine(Convert.ToChar(29) + "VA0");
+            sb.AppendLine(Convert.ToChar(29) + "VA0");
 
 
-                System.IO.File.WriteAllText(@"C:\test\opnamebaby.txt", sb.ToString());
+            System.IO.File.WriteAllText(@"C:\test\opnamebaby.txt", sb.ToString());
 
-                App.shellCommand("copy c:\\test\\opnamebaby.txt " + Args.printer);
+            App.shellCommand("copy c:\\test\\opnamebaby.txt " + Args.printer);
 
-        
-    }
+
+        }
 
         private void dataGridView1_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {

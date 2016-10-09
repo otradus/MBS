@@ -92,6 +92,9 @@ namespace MBS
 
         public static void loadTable(DataGridView dtv, string search)
         {
+            dtv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+            dtv.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None;
+
             MySqlConnection conn = new MySqlConnection(getConnectionString());
             MySqlCommand command1 = new MySqlCommand(search, conn);
             MySqlDataAdapter adapter = new MySqlDataAdapter(command1);
@@ -110,7 +113,11 @@ namespace MBS
             if (dtv.Columns["Subtotal"] != null) { dtv.Columns["Subtotal"].DefaultCellStyle.Format = "c"; }
             //           dtv.Columns["Harga"].DefaultCellStyle.Format = "c";
             //         dtv.Columns["HargaBeli"].DefaultCellStyle.Format = "c";
-            dtv.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+
+            //dtv.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+
+            dtv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dtv.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
         }
 
         public static void loadComboBox(ComboBox cmbx, string search)
@@ -201,9 +208,9 @@ namespace MBS
             dgv.AllowUserToDeleteRows = false;
             dgv.AllowUserToOrderColumns = false;
             dgv.AllowUserToResizeColumns = false;
-            dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgv.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             dgv.AllowUserToResizeRows = false;
+            //dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            //dgv.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             dgv.ReadOnly = true;
             dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgv.RowHeadersVisible = false;
@@ -278,7 +285,8 @@ namespace MBS
             }
 
             sb.AppendLine("----------------------------------------");
-            sb.AppendLine("   Qty: " + qty.ToString() + Convert.ToChar(9) + Convert.ToChar(9) + " TOTAL: " + strtomoney(total.ToString()));
+            //TODO: Total money space length
+            sb.AppendLine("   Qty: " + qty.ToString() + Convert.ToChar(9) + "       TOTAL: " + strtomoney(total.ToString()));
             sb.AppendLine("");
 
             sb.AppendLine(Convert.ToChar(29) + "VA0");
@@ -451,4 +459,5 @@ namespace MBS
 
     }
 
+    
 }
