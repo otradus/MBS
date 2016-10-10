@@ -26,6 +26,7 @@ namespace MBS
         private void OpnameForm_Load(object sender, EventArgs e)
         {
             App.formatDataGridView(dataGridView1);
+            App.autoResizeDataGridView(dataGridView1);
             App.DoubleBuffered(dataGridView1, true);
             ActiveControl = textBox1;
 
@@ -224,6 +225,7 @@ namespace MBS
                 if (dataGridView1[0, i].Value.ToString() == kode)
                 {
                     dataGridView1.Rows[i].Selected = true;
+                    dataGridView1.CurrentCell = dataGridView1.Rows[i].Cells[0];
                 }
             }
 

@@ -127,7 +127,7 @@ namespace MBS
         private void button3_Click(object sender, EventArgs e)
         {
             PembelianForm pembelian = new PembelianForm();
-            pembelian.ShowDialog();
+            pembelian.Show();
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -145,7 +145,7 @@ namespace MBS
         private void button6_Click(object sender, EventArgs e)
         {
             OpnameForm opname = new OpnameForm();
-            opname.ShowDialog();
+            opname.Show();
         }
 
         private void button8_Click(object sender, EventArgs e)

@@ -22,6 +22,7 @@ namespace MBS
         private void CariBarangForm_Load(object sender, EventArgs e)
         {
             App.formatDataGridView(dataGridView1);
+            App.autoResizeDataGridView(dataGridView1);
             App.autoSizeDataGridView(dataGridView1);
             App.DoubleBuffered(dataGridView1, true);
             //DataTable table = App.executeReader("SELECT Kode, Nama, Stok, Harga FROM barang");

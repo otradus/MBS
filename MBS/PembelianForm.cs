@@ -35,6 +35,7 @@ namespace MBS
         {
             App.formatDataGridView(dataGridView1);
             App.DoubleBuffered(dataGridView1, true);
+            App.autoResizeDataGridView(dataGridView1);
             label10.Text = DateTime.Now.ToShortDateString() + " -";
         }
 
@@ -100,7 +101,7 @@ namespace MBS
         {
             textBox2.CharacterCasing = CharacterCasing.Upper;
 
-            DataTable rdr = App.executeReader("SELECT NamaBarang, Kelompok, Satuan , HargaJual, HargaBeli From barang WHERE KodeBarang = '" + textBox2.Text + "'");
+            DataTable rdr = App.executeReader("SELECT NamaBarang, Kelompok, Satuan , HargaJual, HargaBeli, Jumlah, Gudang From barang WHERE KodeBarang = '" + textBox2.Text + "'");
 
             if (rdr.Rows.Count != 0)
             {
@@ -109,9 +110,12 @@ namespace MBS
                     textBox3.Text = row[0].ToString();
                     textBox4.Text = row[2].ToString();
                     textBox6.Text = row[1].ToString();
-                    textBox7.Text = App.strtomoney(row[3].ToString());
-                    textBox8.Text = App.strtomoney(row[4].ToString());
+                    textBox7.Text = App.strtomoney(row[4].ToString());
+                    textBox8.Text = App.strtomoney(row[3].ToString());
+                    label17.Text = "Toko:   " + row[5].ToString();
+                    label18.Text = "Gudang: " + row[6].ToString();
                 }
+                textBox13.Text = calculateLaba();
 
             }
             else
@@ -121,7 +125,10 @@ namespace MBS
                 textBox6.Text = "";
                 textBox7.Text = "";
                 textBox8.Text = "";
+                label17.Text = "";
+                label18.Text = "";
             }
+
         }
 
         private void textBox10_TextChanged(object sender, EventArgs e)
@@ -222,12 +229,12 @@ namespace MBS
 
 
                 //UPDATE barang
-                string sqlupdate = "UPDATE barang SET Jumlah = Jumlah + '"+ dataGridView1[9, i].Value.ToString() +"', Gudang = Gudang + '"+ dataGridView1[10, i].Value.ToString() + "' WHERE KodeBarang = '"+ dataGridView1[1, i].Value.ToString() + "'";
+                string sqlupdate = "UPDATE barang SET HargaBeli = '" + App.stripMoney(dataGridView1[6, i].Value.ToString()) + "', HargaJual = '" + App.stripMoney(dataGridView1[7, i].Value.ToString()) + "',Jumlah = Jumlah + '" + dataGridView1[9, i].Value.ToString() + "', Gudang = Gudang + '" + dataGridView1[10, i].Value.ToString() + "' WHERE KodeBarang = '" + dataGridView1[1, i].Value.ToString() + "'";
 
                 App.executeNonQuery(sqlupdate);
 
-                MessageBox.Show(sql);
-                MessageBox.Show(sqlupdate);
+                //MessageBox.Show(sql);
+                //MessageBox.Show(sqlupdate);
             }
 
             //INSERT INTO pembeliancompact
@@ -244,6 +251,17 @@ namespace MBS
             App.executeNonQuery(sqlcompact);
 
             MessageBox.Show("Pembelian berhasil dimasukkan.");
+
+            //App.printPembelian(DateTime.Now.ToShortDateString() + "-" + textBox1.Text, false);
+            if (printMe("Toko") == true)
+            {
+                printPembelianToko();
+            }
+
+            if (printMe("Gudang") == true)
+            {
+                printPembelianGudang();
+            }
             Close();
         }
 
@@ -436,22 +454,17 @@ namespace MBS
             label14.Text = "0";
         }
 
-        private void textBox11_TextChanged(object sender, EventArgs e)
-        {
-            hitungHargaBeliJual();
-        }
 
-        private void textBox12_TextChanged(object sender, EventArgs e)
-        {
-            hitungHargaBeliJual();
-        }
 
         private void hitungHargaBeliJual()
         {
             try
             {
-                    label14.Text = App.strtomoney((App.moneytodouble(textBox11.Text) / Convert.ToInt32(textBox12.Text)).ToString());
-                    textBox14.Text = App.strtomoney((App.moneytodouble(label14.Text) + App.moneytodouble(textBox13.Text)).ToString());
+                if (textBox12.Text != "" || textBox12.Text != "0")
+                {
+                    label14.Text = App.strtomoney((App.moneytodouble(textBox11.Text) / Convert.ToDouble(textBox12.Text)).ToString());
+                    //textBox14.Text = App.strtomoney((App.moneytodouble(label14.Text) + App.moneytodouble(textBox13.Text)).ToString());
+                }
             }
             catch (Exception)
             {
@@ -459,27 +472,17 @@ namespace MBS
             }
         }
 
-        private void textBox13_TextChanged(object sender, EventArgs e)
-        {
-            hitungHargaBeliJual();
-        }
-
-        private void textBox7_TextChanged(object sender, EventArgs e)
-        {
-            textBox11.Text = textBox7.Text;
-            textBox12.Text = "1";
-        }
 
         private void button8_Click(object sender, EventArgs e)
         {
-            textBox8.Text = textBox14.Text;
         }
 
         private void textBox13_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                button8.PerformClick();
+                textBox14.Text = App.doubletomoney(App.moneytodouble(textBox13.Text) + App.moneytodouble(label14.Text));
+                textBox14.Focus();
             }
         }
 
@@ -492,6 +495,171 @@ namespace MBS
             }
         }
 
-        //TODO: Pembelian cek perubahan harga ke barang!
+        private void textBox11_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                textBox12.Focus();
+            }
+        }
+
+        private void textBox12_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                button9.PerformClick();
+            }
+        }
+
+        private void textBox7_TextChanged_1(object sender, EventArgs e)
+        {
+            textBox11.Text = textBox7.Text;
+            textBox12.Text = "1";
+            label14.Text = textBox7.Text;
+
+        }
+
+        private string calculateLaba()
+        {
+            decimal hargabeli, hargajual;
+            hargabeli = App.moneytodecimal(textBox7.Text);
+            hargajual = App.moneytodecimal(textBox8.Text);
+            return App.strtomoney((hargajual - hargabeli).ToString());
+        }
+
+        private void textBox8_TextChanged(object sender, EventArgs e)
+        {
+            textBox14.Text = textBox8.Text;
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            hitungHargaBeliJual();
+            textBox13.Focus();
+        }
+
+
+        private void textBox14_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                textBox8.Text = App.strtomoney(App.stripMoney(textBox14.Text));
+                textBox7.Text = App.strtomoney(App.stripMoney(label14.Text));
+                textBox8.Focus();
+            }
+        }
+
+        private void printPembelianToko()
+        {
+            DateTime tgl = DateTime.Now;
+
+            //PRINT INVOICE
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine(Convert.ToChar(27) + "a1" + Convert.ToChar(27) + "!4" + "PEMBELIAN [BABY]");
+            sb.AppendLine("TOKO");
+            sb.AppendLine(Convert.ToChar(27) + "@");
+            sb.AppendLine("Faktur: " + label10.Text + " " + textBox1.Text);
+            sb.AppendLine("Tanggal: " + tgl.ToShortDateString() + " Jam: " + tgl.ToShortTimeString());
+            sb.AppendLine("");
+            sb.AppendLine("========================================");
+
+            int qty = 0;
+            int jumlahtoko;
+            for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            {
+                jumlahtoko = Convert.ToInt32(dataGridView1[9, i].Value.ToString());
+                if (jumlahtoko != 0)
+                {
+                    sb.AppendLine(dataGridView1[2, i].Value.ToString() + " ... " + jumlahtoko.ToString());
+                    qty += jumlahtoko;
+                }
+
+            }
+
+            sb.AppendLine("-----------------------------------------");
+            sb.AppendLine("Qty: " + qty.ToString());
+            sb.AppendLine("");
+
+            sb.AppendLine(Convert.ToChar(29) + "VA0");
+
+
+            System.IO.File.WriteAllText(@"C:\test\invoicepembelianketoko.txt", sb.ToString());
+
+            App.shellCommand("copy c:\\test\\invoicepembelianketoko.txt " + Args.printer);
+
+        }
+
+        private void printPembelianGudang()
+        {
+            DateTime tgl = DateTime.Now;
+
+            //PRINT INVOICE
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine(Convert.ToChar(27) + "a1" + Convert.ToChar(27) + "!4" + "PEMBELIAN [BABY]");
+            sb.AppendLine("Gudang");
+            sb.AppendLine(Convert.ToChar(27) + "@");
+            sb.AppendLine("Faktur: " + label10.Text + " " + textBox1.Text);
+            sb.AppendLine("Tanggal: " + tgl.ToShortDateString() + " Jam: " + tgl.ToShortTimeString());
+            sb.AppendLine("");
+            sb.AppendLine("========================================");
+
+            int qty = 0;
+            int jumlahgudang;
+            for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            {
+                jumlahgudang = Convert.ToInt32(dataGridView1[10, i].Value.ToString());
+                if (jumlahgudang != 0)
+                {
+                    sb.AppendLine(dataGridView1[2, i].Value.ToString() + " ... " + jumlahgudang.ToString());
+                    qty += jumlahgudang;
+                }
+
+            }
+
+            sb.AppendLine("-----------------------------------------");
+            sb.AppendLine("Qty: " + qty.ToString());
+            sb.AppendLine("");
+
+            sb.AppendLine(Convert.ToChar(29) + "VA0");
+
+
+            System.IO.File.WriteAllText(@"C:\test\invoicepembeliankegudang.txt", sb.ToString());
+
+            App.shellCommand("copy c:\\test\\invoicepembeliankegudang.txt " + Args.printer);
+
+        }
+
+        private bool printMe(string tipe)
+        {
+            for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            {
+                if (tipe == "Toko")
+                {
+                    if (dataGridView1[9, i].Value.ToString() != "0")
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    if (dataGridView1[10, i].Value.ToString() != "0")
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            App.shellCommand("copy c:\\test\\invoicepembelianketoko.txt " + Args.printer);
+        }
+
+        private void button8_Click_1(object sender, EventArgs e)
+        {
+            App.shellCommand("copy c:\\test\\invoicepembeliankegudang.txt " + Args.printer);
+
+        }
     }
 }

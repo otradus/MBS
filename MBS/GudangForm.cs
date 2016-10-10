@@ -133,23 +133,25 @@ namespace MBS
             {
                 if (row["PengambilanGudang"] != DBNull.Value && row["BatasGudang"] != DBNull.Value)
                 {
-                    if (Convert.ToInt32(row["Jumlah"].ToString()) <= Convert.ToInt32(row["BatasGudang"].ToString()))
+                    if (Convert.ToInt32(row["BatasGudang"].ToString()) > 0)
                     {
-                        if (Convert.ToInt32(row["Gudang"].ToString()) >= Convert.ToInt32(row["PengambilanGudang"].ToString()))
+                        if (Convert.ToInt32(row["Jumlah"].ToString()) <= Convert.ToInt32(row["BatasGudang"].ToString()))
                         {
-                            qty += Convert.ToInt32(row["PengambilanGudang"].ToString());
-                            sb.AppendLine(row["NamaBarang"].ToString() + " ... " + Convert.ToInt32(row["PengambilanGudang"].ToString()));
-                        }
-                        else
-                        {
-                            if (Convert.ToInt32(row["Gudang"].ToString()) != 0)
+                            if (Convert.ToInt32(row["Gudang"].ToString()) >= Convert.ToInt32(row["PengambilanGudang"].ToString()))
                             {
-                                qty += Convert.ToInt32(row["Gudang"].ToString());
-                                sb.AppendLine(row["NamaBarang"].ToString() + " ... " + Convert.ToInt32(row["Gudang"].ToString()));
+                                qty += Convert.ToInt32(row["PengambilanGudang"].ToString());
+                                sb.AppendLine(row["NamaBarang"].ToString() + " ... " + Convert.ToInt32(row["PengambilanGudang"].ToString()));
+                            }
+                            else
+                            {
+                                if (Convert.ToInt32(row["Gudang"].ToString()) != 0)
+                                {
+                                    qty += Convert.ToInt32(row["Gudang"].ToString());
+                                    sb.AppendLine(row["NamaBarang"].ToString() + " ... " + Convert.ToInt32(row["Gudang"].ToString()));
+                                }
                             }
                         }
-                    }
-
+                    }                    
                 }
             }
 
@@ -199,6 +201,14 @@ namespace MBS
 
             }
 
+        }
+
+        private void dataGridView1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                dataGridView1.Rows.RemoveAt(dataGridView1.CurrentRow.Index);
+            }
         }
     }
 }

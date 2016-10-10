@@ -68,7 +68,7 @@ namespace MBS
             }
             else if (radioButton2.Checked == true)
             {
-                App.printPembelian(faktur, "COPY");
+                App.printPembelian(faktur, true);
             }
         }
 

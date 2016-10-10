@@ -147,7 +147,7 @@ namespace MBS
             //return "Rp" + str.Replace(",", ".");
             try
             {
-                return String.Format("{0:C0}", Convert.ToInt32(str));
+                return String.Format("{0:C0}", Convert.ToDecimal(str));
 
             }
             catch (Exception ex)
@@ -202,6 +202,12 @@ namespace MBS
         }
 
 
+        public static void autoResizeDataGridView(DataGridView dgv)
+        {
+            dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dgv.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+        }
+
         public static void formatDataGridView(DataGridView dgv)
         {
             dgv.MultiSelect = false;
@@ -210,7 +216,7 @@ namespace MBS
             dgv.AllowUserToOrderColumns = false;
             dgv.AllowUserToResizeColumns = false;
             dgv.AllowUserToResizeRows = false;
-            //dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            //dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             //dgv.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             dgv.ReadOnly = true;
             dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
@@ -299,29 +305,36 @@ namespace MBS
 
         }
 
-        public static void printPembelian(string faktur, string user)
+        public static void printPembelian(string faktur, bool copy)
         {
             DateTime tgl = DateTime.Now;
-            DataTable rs = executeReader("SELECT Kode, Nama, Jumlah FROM pembelian WHERE Faktur = '" + faktur + "'");
+            DataTable rs = executeReader("SELECT NamaBarang, Jumlah FROM pembelian WHERE Faktur = '" + faktur + "'");
 
             //PRINT INVOICE
             StringBuilder sb = new StringBuilder();
             sb.AppendLine(Convert.ToChar(27) + "a1" + Convert.ToChar(27) + "!4" + "PEMBELIAN [BABY]");
             sb.AppendLine(Convert.ToChar(27) + "@");
-            sb.AppendLine("Faktur: " + faktur + " User: " + user);
-            sb.AppendLine("Tanggal: " + tgl.ToShortDateString() + " Jam: " + tgl.ToShortTimeString());
+            sb.AppendLine("Faktur: " + faktur);
+            if (copy == false)
+            {
+                sb.AppendLine("Tanggal: " + tgl.ToShortDateString() + " Jam: " + tgl.ToShortTimeString());
+            }
+            else
+            {
+                sb.AppendLine("COPY");
+            }
             sb.AppendLine("");
             sb.AppendLine("========================================");
 
             int qty = 0;
             foreach (DataRow row in rs.Rows)
             {
-                sb.AppendLine(row[0].ToString() + Convert.ToChar(9) + row[1].ToString() + Convert.ToChar(9) + row[2].ToString());
-                qty += Convert.ToInt32(row[2]);
+                sb.AppendLine(row[0].ToString() + " ... " + row[1].ToString());
+                qty += Convert.ToInt32(row[1]);
             }
 
             sb.AppendLine("-----------------------------------------");
-            sb.AppendLine("   " + Convert.ToChar(9) + Convert.ToChar(9) + Convert.ToChar(9) + "Qty: " + qty.ToString());
+            sb.AppendLine("Qty: " + qty.ToString());
             sb.AppendLine("");
 
             sb.AppendLine(Convert.ToChar(29) + "VA0");
