@@ -407,8 +407,15 @@ namespace MBS
 
         private void button2_Click(object sender, EventArgs e)
         {
-            Barang barang = new Barang();
-            barang.ShowDialog();
+            using (Barang barang = new Barang())
+            {
+                barang.byUsing = true;
+                barang.ShowDialog();
+
+                textBox2.Text = barang.returnValue;
+                textBox5.Focus();
+                // do what ever with result...
+            }
         }
 
         private void comboBox1_KeyDown(object sender, KeyEventArgs e)

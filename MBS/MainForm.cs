@@ -32,6 +32,9 @@ namespace MBS
                 App.formatDataGridView(dataGridView1);
                 App.DoubleBuffered(dataGridView1, true);
                 App.loadTable(dataGridView1, "SELECT KodeBarang, NamaBarang, Kelompok, Satuan, HargaJual, Jumlah, Gudang, Opname FROM barang WHERE Kelompok = 'PIGEON'");
+                App.fillColumn(dataGridView1, 1);
+                colorJumlah();
+                //dataGridView1.Columns[1].FillWeight = 60;
 
                 this.ActiveControl = textBox1;
 
@@ -50,6 +53,24 @@ namespace MBS
             this.WindowState = FormWindowState.Maximized;
         }
 
+        private void colorJumlah()
+        {
+            for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            {
+
+                if (dataGridView1[5, i].Value.ToString() == "0")
+                {
+                    dataGridView1[5, i].Style.ForeColor = Color.LightGray;
+                }
+
+                if (dataGridView1[6, i].Value.ToString() == "0")
+                {
+                    dataGridView1[6, i].Style.ForeColor = Color.LightGray;
+                }
+
+            }
+        }
+
         private void textBox1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -64,6 +85,8 @@ namespace MBS
                     App.loadTable(dataGridView1, "SELECT KodeBarang, NamaBarang, Kelompok, Satuan, HargaJual, Jumlah, Gudang, Opname FROM barang WHERE NamaBarang LIKE '%" + textBox1.Text + "%'");
                 }
 
+                App.fillColumn(dataGridView1, 1);
+                colorJumlah();
                 textBox1.Text = "";
             }
 
@@ -154,6 +177,8 @@ namespace MBS
             if (result == DialogResult.OK)
             {
                 App.loadTable(dataGridView1, "SELECT KodeBarang, NamaBarang, Kelompok, Satuan, HargaJual, Jumlah, Gudang, Opname FROM barang");
+                App.fillColumn(dataGridView1, 1);
+                colorJumlah();
             }
         }
 
@@ -198,7 +223,7 @@ namespace MBS
             sb.AppendLine("Kode Barang;Nama Barang;Kelompok;Satuan;Harga Jual;Toko;Gudang;Opname;");
             for (int i = 0; i < dataGridView1.Rows.Count; i++)
             {
-                        sb.AppendLine(dataGridView1[0, i].Value.ToString() + ";" + dataGridView1[1, i].Value.ToString() + ";" + dataGridView1[2, i].Value.ToString() + ";" + dataGridView1[3, i].Value.ToString() + ";" + dataGridView1[4, i].Value.ToString() + ";" + dataGridView1[5, i].Value.ToString() + ";" + dataGridView1[6, i].Value.ToString() + ";" + dataGridView1[7, i].Value.ToString() + ";");
+                sb.AppendLine(dataGridView1[0, i].Value.ToString() + ";" + dataGridView1[1, i].Value.ToString() + ";" + dataGridView1[2, i].Value.ToString() + ";" + dataGridView1[3, i].Value.ToString() + ";" + dataGridView1[4, i].Value.ToString() + ";" + dataGridView1[5, i].Value.ToString() + ";" + dataGridView1[6, i].Value.ToString() + ";" + dataGridView1[7, i].Value.ToString() + ";");
             }
 
             System.IO.File.WriteAllText(@"C:\test\csvbaby.csv", sb.ToString());

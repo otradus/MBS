@@ -33,6 +33,8 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.label12 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.textBox10 = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
@@ -59,8 +61,6 @@
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
-            this.label12 = new System.Windows.Forms.Label();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -100,6 +100,7 @@
             this.dataGridView1.Size = new System.Drawing.Size(1248, 432);
             this.dataGridView1.TabIndex = 2;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
+            this.dataGridView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridView1_KeyDown);
             // 
             // groupBox1
             // 
@@ -136,6 +137,27 @@
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Barang";
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Checked = true;
+            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox1.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.checkBox1.Location = new System.Drawing.Point(944, 16);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(116, 25);
+            this.checkBox1.TabIndex = 23;
+            this.checkBox1.Text = "Lorisan Toko";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
+            // label12
+            // 
+            this.label12.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.Location = new System.Drawing.Point(888, 16);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(55, 19);
+            this.label12.TabIndex = 22;
             // 
             // label11
             // 
@@ -188,6 +210,7 @@
             this.textBox8.Name = "textBox8";
             this.textBox8.Size = new System.Drawing.Size(88, 25);
             this.textBox8.TabIndex = 16;
+            this.textBox8.TextChanged += new System.EventHandler(this.textBox8_TextChanged);
             // 
             // label8
             // 
@@ -204,7 +227,7 @@
             this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button2.Location = new System.Drawing.Point(896, 56);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(150, 45);
+            this.button2.Size = new System.Drawing.Size(168, 45);
             this.button2.TabIndex = 21;
             this.button2.Text = "&Save";
             this.button2.UseVisualStyleBackColor = true;
@@ -388,26 +411,6 @@
             this.button6.Text = "&Delete";
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.button6_Click);
-            // 
-            // label12
-            // 
-            this.label12.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(888, 16);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(55, 19);
-            this.label12.TabIndex = 22;
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Checked = true;
-            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox1.Location = new System.Drawing.Point(960, 24);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(90, 17);
-            this.checkBox1.TabIndex = 23;
-            this.checkBox1.Text = "Lorisan Toko";
-            this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // Barang
             // 

@@ -223,6 +223,11 @@ namespace MBS
             dgv.RowHeadersVisible = false;
         }
 
+        public static void fillColumn(DataGridView dgv, int thecolumn)
+        {
+            dgv.Columns[thecolumn].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+        }
+
         public static void autoSizeDataGridView(DataGridView dgv)
         {
             dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;

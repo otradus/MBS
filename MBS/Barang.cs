@@ -12,6 +12,8 @@ namespace MBS
 {
     public partial class Barang : Form
     {
+        public bool byUsing = false;
+        public string returnValue;
         public static bool add = false;
         public static bool edit = false;
         Random rnd = new Random();
@@ -55,6 +57,7 @@ namespace MBS
                            loris
                            ));
                         MessageBox.Show("Barang berhasil dimasukkan");
+                        textBox1.Text = textBox3.Text;
                         loadBarang();
                         clearAll();
 
@@ -307,6 +310,47 @@ namespace MBS
             textBox3.Text = textBox2.Text + " ";
             textBox3.Focus();
             textBox3.SelectionStart = textBox3.Text.Length;
+        }
+
+        private void textBox8_TextChanged(object sender, EventArgs e)
+        {
+            if (edit == true && add == false)
+            {
+                try
+                {
+                    int jumlahawal = Convert.ToInt32(dataGridView1[7, dataGridView1.CurrentCell.RowIndex].Value.ToString());
+                    int result;
+                    if (textBox8.Text != "")
+                    {
+                        result = Convert.ToInt32(textBox8.Text) - jumlahawal;
+                        label12.Text = result.ToString();
+                    }
+                    else
+                    {
+                        label12.Text = "";
+                    }
+
+                }
+                catch (Exception ex)
+                {
+
+                    MessageBox.Show(ex.Message);
+                }
+
+            }
+
+        }
+
+        private void dataGridView1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (byUsing == true)
+                {
+                    returnValue = dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString();
+                    Close();
+                }
+            }
         }
     }
 }

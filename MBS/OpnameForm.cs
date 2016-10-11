@@ -26,7 +26,18 @@ namespace MBS
         private void OpnameForm_Load(object sender, EventArgs e)
         {
             App.formatDataGridView(dataGridView1);
-            App.autoResizeDataGridView(dataGridView1);
+
+            dataGridView1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            dataGridView1.Columns[0].FillWeight = Convert.ToSingle(0.20 * dataGridView1.Width);
+            dataGridView1.Columns[1].FillWeight = Convert.ToSingle(0.40 * dataGridView1.Width);
+            dataGridView1.Columns[2].FillWeight = Convert.ToSingle(0.10 * dataGridView1.Width);
+            dataGridView1.Columns[3].FillWeight = Convert.ToSingle(0.10 * dataGridView1.Width);
+            dataGridView1.Columns[4].FillWeight = Convert.ToSingle(0.10 * dataGridView1.Width);
+            dataGridView1.Columns[5].FillWeight = Convert.ToSingle(0.10 * dataGridView1.Width);
+
+
             App.DoubleBuffered(dataGridView1, true);
             ActiveControl = textBox1;
 
@@ -194,16 +205,7 @@ namespace MBS
                     dataGridView1[2, i].Style.ForeColor = Color.GhostWhite;
                     dataGridView1[3, i].Style.ForeColor = Color.GhostWhite;
                 }
-
-                if (gudang == "0" && selisihgudang == 0)
-                {
-
-                    dataGridView1[4, i].Style.ForeColor = Color.GhostWhite;
-                    dataGridView1[5, i].Style.ForeColor = Color.GhostWhite;
-                }
-
-
-                if (selisihjumlah == 0)
+                else if (selisihjumlah == 0)
                 {
                     dataGridView1[3, i].Style.BackColor = Color.LightGreen;
                 }
@@ -215,6 +217,30 @@ namespace MBS
                 {
                     dataGridView1[3, i].Style.BackColor = Color.Pink;
                 }
+
+
+                if (gudang == "0" && selisihgudang == 0)
+                {
+
+                    dataGridView1[4, i].Style.ForeColor = Color.GhostWhite;
+                    dataGridView1[5, i].Style.ForeColor = Color.GhostWhite;
+                }
+                else if (selisihgudang == 0)
+                {
+                    dataGridView1[5, i].Style.BackColor = Color.LightGreen;
+                }
+                else if (selisihgudang > 0)
+                {
+                    dataGridView1[5, i].Style.BackColor = Color.LightBlue;
+                }
+                else
+                {
+                    dataGridView1[5, i].Style.BackColor = Color.Pink;
+                }
+
+
+
+
             }
         }
 

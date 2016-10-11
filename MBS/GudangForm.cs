@@ -21,13 +21,22 @@ namespace MBS
         {
             App.formatDataGridView(dataGridView1);
             App.DoubleBuffered(dataGridView1, true);
+
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridView1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+
+            dataGridView1.Columns[0].FillWeight = Convert.ToSingle(0.25 * dataGridView1.Width);
+            dataGridView1.Columns[1].FillWeight = Convert.ToSingle(0.50 * dataGridView1.Width);
+            dataGridView1.Columns[2].FillWeight = Convert.ToSingle(0.25 * dataGridView1.Width);
+
+
             this.ActiveControl = textBox1;
 
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (textBox2.Text != "" || textBox2.Text != "0")
+            if (textBox2.Text != "")
             {
                 try
                 {
