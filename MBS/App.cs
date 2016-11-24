@@ -123,6 +123,7 @@ namespace MBS
 
         public static void loadComboBox(ComboBox cmbx, string search)
         {
+            cmbx.Items.Clear();
             MySqlConnection conn = new MySqlConnection(getConnectionString());
             MySqlCommand command1 = new MySqlCommand(search, conn);
             MySqlDataAdapter adapter = new MySqlDataAdapter(command1);

@@ -397,5 +397,18 @@ namespace MBS
             textBox1.Text = dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString();
             //textBox2.Focus();
         }
+
+        private void OpnameForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                DialogResult result = MessageBox.Show("Keluar dari Opname?", "Keluar", MessageBoxButtons.OKCancel);
+                if (result == DialogResult.OK)
+                {
+                    Close();
+                }
+            }
+
+        }
     }
 }

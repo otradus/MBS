@@ -219,5 +219,18 @@ namespace MBS
                 dataGridView1.Rows.RemoveAt(dataGridView1.CurrentRow.Index);
             }
         }
+
+        private void GudangForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                DialogResult result = MessageBox.Show("Keluar dari Gudang?", "Keluar", MessageBoxButtons.OKCancel);
+                if (result == DialogResult.OK)
+                {
+                    Close();
+                }
+            }
+
+        }
     }
 }

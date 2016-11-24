@@ -425,10 +425,12 @@
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.label1);
+            this.KeyPreview = true;
             this.Name = "Barang";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Barang";
             this.Load += new System.EventHandler(this.Barang_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Barang_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

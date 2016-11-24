@@ -91,17 +91,22 @@ namespace MBS
                                 gudang
                                 );
 
+                //Change Pengambilan Gudang and Batas Gudang
+                App.executeNonQuery("UPDATE barang SET PengambilanGudang = '" + textBox16.Text + "', BatasGudang = '" + textBox15.Text + "' WHERE NamaBarang = '" + textBox3.Text + "'");
+
+
                 calculateTotal();
 
                 clearBox();
             }
         }
 
+ 
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
             textBox2.CharacterCasing = CharacterCasing.Upper;
 
-            DataTable rdr = App.executeReader("SELECT NamaBarang, Kelompok, Satuan , HargaJual, HargaBeli, Jumlah, Gudang From barang WHERE KodeBarang = '" + textBox2.Text + "'");
+            DataTable rdr = App.executeReader("SELECT NamaBarang, Kelompok, Satuan , HargaJual, HargaBeli, Jumlah, Gudang, PengambilanGudang, BatasGudang From barang WHERE KodeBarang = '" + textBox2.Text + "'");
 
             if (rdr.Rows.Count != 0)
             {
@@ -114,6 +119,8 @@ namespace MBS
                     textBox8.Text = App.strtomoney(row[3].ToString());
                     label17.Text = "Toko:   " + row[5].ToString();
                     label18.Text = "Gudang: " + row[6].ToString();
+                    textBox16.Text = row[7].ToString();
+                    textBox15.Text = row[8].ToString();
                 }
                 textBox13.Text = calculateLaba();
 
@@ -127,6 +134,8 @@ namespace MBS
                 textBox8.Text = "";
                 label17.Text = "";
                 label18.Text = "";
+                textBox15.Text = "";
+                textBox16.Text = "";
             }
 
         }
@@ -667,6 +676,18 @@ namespace MBS
         {
             App.shellCommand("copy c:\\test\\invoicepembeliankegudang.txt " + Args.printer);
 
+        }
+
+        private void PembelianForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                DialogResult result = MessageBox.Show("Keluar dari Pembelian?", "Keluar", MessageBoxButtons.OKCancel);
+                if (result == DialogResult.OK)
+                {
+                    Close();
+                }
+            }
         }
     }
 }

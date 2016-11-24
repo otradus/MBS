@@ -412,5 +412,23 @@ namespace MBS
                 calculateTotalQty();
             }
         }
+
+        private void Penjualan_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                DialogResult result = MessageBox.Show("Keluar dari Penjualan?", "Keluar", MessageBoxButtons.OKCancel);
+                if (result == DialogResult.OK)
+                {
+                    Close();
+                }
+            }
+
+            if (e.KeyCode == Keys.F7)
+            {
+                button3.PerformClick();
+            }
+
+        }
     }
 }

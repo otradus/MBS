@@ -24,6 +24,9 @@ namespace MBS
             App.DoubleBuffered(dataGridView1, true);
             App.DoubleBuffered(dataGridView2, true);
 
+            App.autoResizeDataGridView(dataGridView1);
+            App.autoResizeDataGridView(dataGridView2);
+
             //            DataTable dt = App.executeReader("SELECT Faktur FROM penjualan WHERE Tanggal = '" + DateTime.Now.ToShortDateString() + "'");
             DataTable dt = App.executeReader("SELECT Faktur FROM penjualancompact WHERE Tanggal = '" + DateTime.Now.ToShortDateString() + "' AND Bayar = '0'");
 

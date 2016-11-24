@@ -262,8 +262,12 @@ namespace MBS
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Kelompok kelompok = new Kelompok();
-            kelompok.ShowDialog();
+            using (Kelompok kelompok = new Kelompok())
+            {
+                kelompok.ShowDialog();
+                App.loadComboBox(comboBox1, "SELECT * FROM kelompok");
+            }
+
         }
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -350,6 +354,14 @@ namespace MBS
                     returnValue = dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString();
                     Close();
                 }
+            }
+        }
+
+        private void Barang_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                Close();
             }
         }
     }

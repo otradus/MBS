@@ -232,5 +232,53 @@ namespace MBS
 
 
         }
+
+        private void MainForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                DialogResult result = MessageBox.Show("Keluar dari Aplikasi?", "Keluar", MessageBoxButtons.OKCancel);
+                if (result == DialogResult.OK)
+                {
+                    Close();
+                }
+            }
+
+            if (e.KeyCode == Keys.F1)
+            {
+                button1.PerformClick();
+            }
+
+            if (e.KeyCode == Keys.F2)
+            {
+                button2.PerformClick();
+            }
+
+            if (e.KeyCode == Keys.F3)
+            {
+                button3.PerformClick();
+            }
+
+            if (e.KeyCode == Keys.F4)
+            {
+                button4.PerformClick();
+            }
+
+            if (e.KeyCode == Keys.F5)
+            {
+                button5.PerformClick();
+            }
+
+            if (e.KeyCode == Keys.F6)
+            {
+                button6.PerformClick();
+            }
+
+            if (e.KeyCode == Keys.F7)
+            {
+                button7.PerformClick();
+            }
+
+        }
     }
 }

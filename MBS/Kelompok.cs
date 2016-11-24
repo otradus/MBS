@@ -21,6 +21,7 @@ namespace MBS
         {
             App.formatDataGridView(dataGridView1);
             App.DoubleBuffered(dataGridView1, true);
+            dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.Fill);
             App.loadTable(dataGridView1, "SELECT * FROM kelompok ORDER BY Nama");
             this.ActiveControl = textBox1;
         }
