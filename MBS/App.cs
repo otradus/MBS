@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Data;
+using System.IO.Ports;
 using System.Net.Mail;
 using System.Reflection;
 using System.Text;
@@ -351,6 +352,40 @@ namespace MBS
             shellCommand("copy c:\\test\\invoicepembelian.txt " + Args.printer);
 
         }
+
+
+        public static void poleDisplay(string string1, string string2)
+        {
+            if (Args.poledisplay == true)
+            {
+                try
+                {
+                    SerialPort sp = new SerialPort();
+
+                    sp.PortName = "COM1";
+                    sp.BaudRate = 9600;
+                    sp.Parity = Parity.None;
+                    sp.DataBits = 8;
+                    sp.StopBits = StopBits.One;
+                    sp.Open();
+
+                    //sp.WriteLine((char)27 + (char)64 + string1 + (char)27 + (char)68 + string2);
+                    sp.WriteLine('\x1B' + '\x55' + "                    " + '\x1B' + '\x44' + "                    " + '\x1B' + '\x55');
+                    sp.WriteLine('\x1B' + '\x55' + string1 + '\x1B' + '\x44' + string2 + '\x1B' + '\x55');
+
+                    sp.Close();
+                    sp.Dispose();
+                    sp = null;
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
+
+            }
+        }
+
 
         public static void printBarcode(string kode, string nama, string harga, string queue, string printerbarcode)
         {

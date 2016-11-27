@@ -254,7 +254,7 @@ namespace MBS
             }
 
             string poledisplay;
-            if (checkBox1.Checked == true)
+            if (checkBox2.Checked == true)
             {
                 poledisplay = "1";
             }

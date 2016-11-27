@@ -72,8 +72,7 @@ namespace MBS
         {
             if (Args.admin == false)
             {
-                textBox1.Enabled = false;
-                textBox1.Visible = false;
+                validate = true;
                 timer1.Start();
             }
         }

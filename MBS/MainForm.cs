@@ -50,6 +50,8 @@ namespace MBS
                 button4.Enabled = false;
             }
 
+            App.poleDisplay("Maju Baby Shop", DateTime.Now.ToShortDateString());
+
             this.WindowState = FormWindowState.Maximized;
         }
 

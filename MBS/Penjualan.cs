@@ -15,6 +15,7 @@ namespace MBS
     {
         public static string user;
         public static bool retur = false;
+        public bool selesai = false;
 
         public Penjualan(string user1)
         {
@@ -74,9 +75,18 @@ namespace MBS
 
                 calculateTotalQty();
 
+                if (Args.poledisplay == true)
+                {
+                    string string1 = dataGridView1[1, dataGridView1.RowCount - 1].Value.ToString();
+                    string string2 = dataGridView1[3, dataGridView1.RowCount - 1].Value.ToString() + " X " + dataGridView1[4, dataGridView1.RowCount - 1].Value.ToString();
+                    App.poleDisplay(string1, string2);
+                }
+
+
                 textBox1.Text = "";
                 textBox2.Text = "";
                 textBox3.Text = "";
+
 
                 dataGridView1.ClearSelection();
 
@@ -233,94 +243,106 @@ namespace MBS
 
         private void button3_Click(object sender, EventArgs e)
         {
-            if (dataGridView1.RowCount != 0)
+            if (selesai == false)
             {
-                DateTime tgl = DateTime.Now;
-                MySqlConnection conn = new MySqlConnection(App.getConnectionString());
-                MySqlCommand cmd = new MySqlCommand();
-
-                string lastfaktur = App.getFaktur(tgl);
-
-                try
+                if (dataGridView1.RowCount != 0)
                 {
-                    conn.Open();
-                    cmd.Connection = conn;
+                    DateTime tgl = DateTime.Now;
+                    MySqlConnection conn = new MySqlConnection(App.getConnectionString());
+                    MySqlCommand cmd = new MySqlCommand();
 
-                    string kode;
-                    string nama;
-                    string jumlah;
-                    string harga;
-                    string subtotal;
-                    double total = 0;
-                    double laba = 0;
-                    double labatotal = 0;
+                    string lastfaktur = App.getFaktur(tgl);
 
-                    for (int i = 0; i < dataGridView1.RowCount; i++)
+                    try
                     {
-                        kode = dataGridView1[0, i].Value.ToString();
-                        nama = dataGridView1[1, i].Value.ToString();
-                        jumlah = dataGridView1[3, i].Value.ToString();
-                        harga = App.stripMoney(dataGridView1[4, i].Value.ToString());
-                        subtotal = App.stripMoney(dataGridView1[5, i].Value.ToString());
+                        conn.Open();
+                        cmd.Connection = conn;
 
-                        laba = (Convert.ToDouble(harga) - Convert.ToDouble(App.executeScalar("SELECT HargaBeli FROM barang WHERE KodeBarang = '" + kode + "'").ToString())) * Convert.ToDouble(jumlah);
+                        string kode;
+                        string nama;
+                        string jumlah;
+                        string harga;
+                        string subtotal;
+                        double total = 0;
+                        double laba = 0;
+                        double labatotal = 0;
+
+                        for (int i = 0; i < dataGridView1.RowCount; i++)
+                        {
+                            kode = dataGridView1[0, i].Value.ToString();
+                            nama = dataGridView1[1, i].Value.ToString();
+                            jumlah = dataGridView1[3, i].Value.ToString();
+                            harga = App.stripMoney(dataGridView1[4, i].Value.ToString());
+                            subtotal = App.stripMoney(dataGridView1[5, i].Value.ToString());
+
+                            laba = (Convert.ToDouble(harga) - Convert.ToDouble(App.executeScalar("SELECT HargaBeli FROM barang WHERE KodeBarang = '" + kode + "'").ToString())) * Convert.ToDouble(jumlah);
 
 
-                        labatotal += laba;
+                            labatotal += laba;
 
-                        cmd.CommandText = "INSERT INTO penjualan SET Tanggal='" + tgl.ToShortDateString() + "', Faktur='" + lastfaktur + "',KodeBarang='" + kode + "',NamaBarang='" + nama + "',Jumlah='" + jumlah + "',Harga='" + harga + "',Subtotal='" + subtotal + "',Laba='" + laba + "'";
+                            cmd.CommandText = "INSERT INTO penjualan SET Tanggal='" + tgl.ToShortDateString() + "', Faktur='" + lastfaktur + "',KodeBarang='" + kode + "',NamaBarang='" + nama + "',Jumlah='" + jumlah + "',Harga='" + harga + "',Subtotal='" + subtotal + "',Laba='" + laba + "'";
+                            cmd.ExecuteNonQuery();
+
+                            //check if jumlah = 0
+                            int cekjumlah = Convert.ToInt32(App.executeScalar("SELECT Jumlah FROM barang WHERE KodeBarang = '" + kode + "'"));
+                            if (cekjumlah - Convert.ToInt32(jumlah) >= 0)
+                            {
+                                cmd.CommandText = "UPDATE barang SET Jumlah = Jumlah - '" + jumlah + "' WHERE KodeBarang = '" + kode + "'";
+                                cmd.ExecuteNonQuery();
+                            }
+                            else
+                            {
+                                MessageBox.Show("PERHATIAN: Jumlah barang " + nama + " sudah 0 di komputer");
+                                cmd.CommandText = "UPDATE barang SET Jumlah = '0' WHERE KodeBarang = '" + kode + "'";
+                                cmd.ExecuteNonQuery();
+                            }
+
+
+                            addLorisan(kode, nama, jumlah);
+
+                            total += App.cDouble(App.stripMoney(dataGridView1[5, i].Value.ToString()));
+                        }
+
+                        cmd.CommandText = "INSERT INTO penjualancompact SET Tanggal='" + tgl.ToShortDateString() + "', Faktur='" + lastfaktur + "', User='" + user + "',Total='" + total + "',Laba='" + labatotal + "', Bayar='0'";
                         cmd.ExecuteNonQuery();
 
-                        //check if jumlah = 0
-                        int cekjumlah = Convert.ToInt32(App.executeScalar("SELECT Jumlah FROM barang WHERE KodeBarang = '" + kode + "'"));
-                        if (cekjumlah - Convert.ToInt32(jumlah) >= 0)
-                        {
-                            cmd.CommandText = "UPDATE barang SET Jumlah = Jumlah - '" + jumlah + "' WHERE KodeBarang = '" + kode + "'";
-                            cmd.ExecuteNonQuery();
-                        }
-                        else
-                        {
-                            MessageBox.Show("PERHATIAN: Jumlah barang " + nama + " sudah 0 di komputer");
-                            cmd.CommandText = "UPDATE barang SET Jumlah = '0' WHERE KodeBarang = '" + kode + "'";
-                            cmd.ExecuteNonQuery();
-                        }
 
+                        conn.Close();
 
-                        addLorisan(kode, nama, jumlah);
+                        selesai = true;
 
-                        total += App.cDouble(App.stripMoney(dataGridView1[5, i].Value.ToString()));
+                        App.poleDisplay("Maju Baby Shop", DateTime.Now.ToShortDateString());
                     }
 
-                    cmd.CommandText = "INSERT INTO penjualancompact SET Tanggal='" + tgl.ToShortDateString() + "', Faktur='" + lastfaktur + "', User='" + user + "',Total='" + total + "',Laba='" + labatotal + "', Bayar='0'";
-                    cmd.ExecuteNonQuery();
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.ToString());
+                    }
+
+                    App.sendEmail("Penjualan MBS " + DateTime.Now.ToShortDateString(), mailBody());
+                    App.printPenjualan(lastfaktur, user);
 
 
-                    conn.Close();
+                    this.Close();
 
                 }
-
-                catch (Exception ex)
+                else
                 {
-                    MessageBox.Show(ex.ToString());
+                    MessageBox.Show("Penjualan masih kosong!");
                 }
-
-                App.sendEmail("Penjualan MBS " + DateTime.Now.ToShortDateString(), mailBody());
-                App.printPenjualan(lastfaktur, user);
-
-
-                this.Close();
 
             }
             else
             {
-                MessageBox.Show("Penjualan masih kosong!");
+                MessageBox.Show("Penjualan sudah selesai!");
+                Close();
             }
         }
 
         private string mailBody()
         {
             string msg;
-            msg = "Tanggal: " + DateTime.Now.ToShortDateString() + " Jam: " + DateTime.Now.ToShortTimeString() +"\n";
+            msg = "Tanggal: " + DateTime.Now.ToShortDateString() + " Jam: " + DateTime.Now.ToShortTimeString() + "\n";
             msg += "Faktur: " + label1.Text + " User: " + label2.Text + "\n\n";
 
             msg += "Penjualan: " + label4.Text + "\n\n";
@@ -330,7 +352,7 @@ namespace MBS
                 msg += dataGridView1[3, i].Value.ToString() + " x " + dataGridView1[4, i].Value.ToString() + " = " + dataGridView1[5, i].Value.ToString() + "\n";
             }
 
-            msg += "\nTotal: " + App.strtomoney(App.executeScalar("SELECT SUM(Total) FROM penjualancompact WHERE Tanggal = '"+ DateTime.Now.ToShortDateString() +"'").ToString());
+            msg += "\nTotal: " + App.strtomoney(App.executeScalar("SELECT SUM(Total) FROM penjualancompact WHERE Tanggal = '" + DateTime.Now.ToShortDateString() + "'").ToString());
 
             return msg;
         }
