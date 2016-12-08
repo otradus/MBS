@@ -100,8 +100,14 @@
     <Compile Include="Laporan.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Laporan.designer.cs">
+    <Compile Include="Laporan.Designer.cs">
       <DependentUpon>Laporan.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LaporanOld.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LaporanOld.designer.cs">
+      <DependentUpon>LaporanOld.cs</DependentUpon>
     </Compile>
     <Compile Include="Login.cs">
       <SubType>Form</SubType>
@@ -179,6 +185,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Laporan.resx">
       <DependentUpon>Laporan.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LaporanOld.resx">
+      <DependentUpon>LaporanOld.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Login.resx">
       <DependentUpon>Login.cs</DependentUpon>

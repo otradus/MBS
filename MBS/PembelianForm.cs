@@ -23,11 +23,13 @@ namespace MBS
             {
                 groupBox1.Enabled = true;
                 button6.Enabled = true;
+                groupBox3.Enabled = true;
             }
             else
             {
                 groupBox1.Enabled = false;
                 button6.Enabled = false;
+                groupBox3.Enabled = true;
             }
         }
 
@@ -246,15 +248,27 @@ namespace MBS
                 //MessageBox.Show(sqlupdate);
             }
 
+            string jatuhtempo, lunas;
+            if (radioButton3.Checked == true)
+            {
+                jatuhtempo = "Tunai";
+                lunas = "LUNAS";
+            }
+            else
+            {
+                jatuhtempo = dateTimePicker1.Value.ToShortDateString();
+                lunas = "Belum Lunas";
+            }
+
             //INSERT INTO pembeliancompact
             string sqlcompact = string.Format("INSERT INTO pembeliancompact VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}')",
                     DateTime.Now.ToShortDateString(),
                     DateTime.Now.ToShortDateString() + "-" + textBox1.Text,
                     comboBox1.Text,
                     App.stripMoney(label2.Text),
-                    "",
-                    "",
-                    "0"
+                    jatuhtempo,
+                    textBox17.Text,
+                    lunas
                     );
 
             App.executeNonQuery(sqlcompact);

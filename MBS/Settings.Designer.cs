@@ -57,13 +57,14 @@
             this.label10 = new System.Windows.Forms.Label();
             this.button4 = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.textBox11 = new System.Windows.Forms.TextBox();
-            this.textBox12 = new System.Windows.Forms.TextBox();
-            this.label12 = new System.Windows.Forms.Label();
+            this.button3 = new System.Windows.Forms.Button();
             this.textBox13 = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
-            this.button3 = new System.Windows.Forms.Button();
+            this.textBox12 = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.textBox11 = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -284,6 +285,7 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.checkBox3);
             this.groupBox4.Controls.Add(this.checkBox2);
             this.groupBox4.Controls.Add(this.textBox10);
             this.groupBox4.Controls.Add(this.label10);
@@ -350,21 +352,31 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Email";
             // 
-            // label11
+            // button3
             // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(16, 24);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(58, 13);
-            this.label11.TabIndex = 0;
-            this.label11.Text = "Username:";
+            this.button3.Location = new System.Drawing.Point(288, 64);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.TabIndex = 7;
+            this.button3.Text = "OK";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click_1);
             // 
-            // textBox11
+            // textBox13
             // 
-            this.textBox11.Location = new System.Drawing.Point(80, 24);
-            this.textBox11.Name = "textBox11";
-            this.textBox11.Size = new System.Drawing.Size(100, 20);
-            this.textBox11.TabIndex = 1;
+            this.textBox13.Location = new System.Drawing.Point(80, 48);
+            this.textBox13.Name = "textBox13";
+            this.textBox13.Size = new System.Drawing.Size(100, 20);
+            this.textBox13.TabIndex = 5;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(16, 48);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(55, 13);
+            this.label13.TabIndex = 4;
+            this.label13.Text = "Recipient:";
             // 
             // textBox12
             // 
@@ -383,31 +395,31 @@
             this.label12.TabIndex = 2;
             this.label12.Text = "Password:";
             // 
-            // textBox13
+            // textBox11
             // 
-            this.textBox13.Location = new System.Drawing.Point(80, 48);
-            this.textBox13.Name = "textBox13";
-            this.textBox13.Size = new System.Drawing.Size(100, 20);
-            this.textBox13.TabIndex = 5;
+            this.textBox11.Location = new System.Drawing.Point(80, 24);
+            this.textBox11.Name = "textBox11";
+            this.textBox11.Size = new System.Drawing.Size(100, 20);
+            this.textBox11.TabIndex = 1;
             // 
-            // label13
+            // label11
             // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(16, 48);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(55, 13);
-            this.label13.TabIndex = 4;
-            this.label13.Text = "Recipient:";
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(16, 24);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(58, 13);
+            this.label11.TabIndex = 0;
+            this.label11.Text = "Username:";
             // 
-            // button3
+            // checkBox3
             // 
-            this.button3.Location = new System.Drawing.Point(288, 64);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 7;
-            this.button3.Text = "OK";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click_1);
+            this.checkBox3.AutoSize = true;
+            this.checkBox3.Location = new System.Drawing.Point(232, 24);
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.Size = new System.Drawing.Size(136, 17);
+            this.checkBox3.TabIndex = 7;
+            this.checkBox3.Text = "Jatuh Tempo Reminder";
+            this.checkBox3.UseVisualStyleBackColor = true;
             // 
             // Settings
             // 
@@ -474,5 +486,6 @@
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.TextBox textBox11;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.CheckBox checkBox3;
     }
 }

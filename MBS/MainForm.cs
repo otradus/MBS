@@ -52,6 +52,11 @@ namespace MBS
 
             App.poleDisplay("Maju Baby Shop", DateTime.Now.ToShortDateString());
 
+            if (Args.jatuhtemporeminder == true)
+            {
+                timer1.Enabled = true;
+            }
+
             this.WindowState = FormWindowState.Maximized;
         }
 
@@ -92,14 +97,6 @@ namespace MBS
                 textBox1.Text = "";
             }
 
-            if (e.KeyCode == Keys.F8)
-            {
-                if (Args.admin == true)
-                {
-                    Laporan laporan = new Laporan();
-                    laporan.ShowDialog();
-                }
-            }
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -281,6 +278,52 @@ namespace MBS
                 button7.PerformClick();
             }
 
+            if (e.KeyCode == Keys.F8)
+            {
+                if (Args.admin == true)
+                {
+                    Laporan laporan = new Laporan();
+                    laporan.ShowDialog();
+                }
+            }
+
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (DateTime.Now.Hour == 9 && DateTime.Now.Minute == 0 && DateTime.Now.Second == 0)
+            {
+                string mailbody = "";
+                int count = 0;
+                count = Convert.ToInt32(App.executeScalar("SELECT COUNT(*) FROM pembeliancompact WHERE JatuhTempo = '" + DateTime.Now.ToShortDateString() + "' AND Lunas = 'Belum Lunas'"));
+                if (count > 0)
+                {
+                    DataTable dt = App.executeReader("SELECT * FROM pembeliancompact WHERE JatuhTempo = '" + DateTime.Now.ToShortDateString() + "' AND Lunas = 'Belum Lunas'");
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        mailbody += row[0] + " " + row[1] + " " + row[2] + " " + App.strtomoney(row[3].ToString()) + " " + row[4] + " " + row[5] + " " + row[6] + " " + "\n";
+                    }
+                    App.sendEmail("Utang Jatuh Tempo", mailbody);
+                }
+
+            }
+        }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            string mailbody = "";
+            int count = 0;
+            count = Convert.ToInt32(App.executeScalar("SELECT COUNT(*) FROM pembeliancompact WHERE JatuhTempo = '" + DateTime.Now.ToShortDateString() + "' AND Lunas = 'Belum Lunas'"));
+            if (count > 0)
+            {
+                DataTable dt = App.executeReader("SELECT * FROM pembeliancompact WHERE JatuhTempo = '" + DateTime.Now.ToShortDateString() + "' AND Lunas = 'Belum Lunas'");
+                foreach (DataRow row in dt.Rows)
+                {
+                    mailbody += row[0] + " " + row[1] + " " + row[2] + " " + App.strtomoney(row[3].ToString()) + " " + row[4] + " " + row[5] + " " + row[6] + " " + "\n";
+                }
+                App.sendEmail("Utang Jatuh Tempo", mailbody);
+                MessageBox.Show(mailbody);
+            }
         }
     }
 }

@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label1 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
@@ -72,6 +72,10 @@
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.textBox15 = new System.Windows.Forms.TextBox();
+            this.label19 = new System.Windows.Forms.Label();
+            this.textBox16 = new System.Windows.Forms.TextBox();
+            this.label20 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.button9 = new System.Windows.Forms.Button();
             this.textBox14 = new System.Windows.Forms.TextBox();
@@ -89,13 +93,16 @@
             this.label18 = new System.Windows.Forms.Label();
             this.button8 = new System.Windows.Forms.Button();
             this.button10 = new System.Windows.Forms.Button();
-            this.textBox15 = new System.Windows.Forms.TextBox();
-            this.label19 = new System.Windows.Forms.Label();
-            this.textBox16 = new System.Windows.Forms.TextBox();
-            this.label20 = new System.Windows.Forms.Label();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.radioButton3 = new System.Windows.Forms.RadioButton();
+            this.radioButton4 = new System.Windows.Forms.RadioButton();
+            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
+            this.label21 = new System.Windows.Forms.Label();
+            this.textBox17 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -169,8 +176,8 @@
             this.label2.ForeColor = System.Drawing.Color.Blue;
             this.label2.Location = new System.Drawing.Point(0, 48);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(778, 72);
-            this.label2.TabIndex = 8;
+            this.label2.Size = new System.Drawing.Size(616, 72);
+            this.label2.TabIndex = 7;
             this.label2.Text = "Total:";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -179,14 +186,14 @@
             this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Segoe UI", 10F);
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 10F);
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
@@ -200,19 +207,19 @@
             this.Column9,
             this.Column10,
             this.Column11});
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Segoe UI", 10F);
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle6.Padding = new System.Windows.Forms.Padding(2);
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 10F);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(2);
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridView1.Location = new System.Drawing.Point(8, 256);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(1112, 440);
-            this.dataGridView1.TabIndex = 10;
+            this.dataGridView1.TabIndex = 13;
             this.dataGridView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridView1_KeyDown);
             // 
             // Column1
@@ -278,7 +285,7 @@
             this.button6.Location = new System.Drawing.Point(1128, 8);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(216, 112);
-            this.button6.TabIndex = 7;
+            this.button6.TabIndex = 9;
             this.button6.Text = "SELESAI";
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.button6_Click);
@@ -356,7 +363,7 @@
             this.label6.Location = new System.Drawing.Point(216, 24);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(56, 23);
-            this.label6.TabIndex = 8;
+            this.label6.TabIndex = 6;
             this.label6.Text = "Jumlah:";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -366,7 +373,7 @@
             this.textBox5.Location = new System.Drawing.Point(272, 24);
             this.textBox5.Name = "textBox5";
             this.textBox5.Size = new System.Drawing.Size(88, 25);
-            this.textBox5.TabIndex = 9;
+            this.textBox5.TabIndex = 7;
             this.textBox5.TextChanged += new System.EventHandler(this.textBox5_TextChanged);
             this.textBox5.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox5_KeyDown);
             // 
@@ -376,7 +383,7 @@
             this.label7.Location = new System.Drawing.Point(176, 88);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(72, 23);
-            this.label7.TabIndex = 6;
+            this.label7.TabIndex = 8;
             this.label7.Text = "Kelompok:";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -387,7 +394,7 @@
             this.textBox6.Location = new System.Drawing.Point(248, 88);
             this.textBox6.Name = "textBox6";
             this.textBox6.Size = new System.Drawing.Size(112, 25);
-            this.textBox6.TabIndex = 7;
+            this.textBox6.TabIndex = 9;
             // 
             // label8
             // 
@@ -435,7 +442,7 @@
             this.button4.Location = new System.Drawing.Point(392, 88);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(75, 32);
-            this.button4.TabIndex = 18;
+            this.button4.TabIndex = 14;
             this.button4.Text = "OK";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
@@ -446,7 +453,7 @@
             this.button5.Location = new System.Drawing.Point(472, 88);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(75, 32);
-            this.button5.TabIndex = 19;
+            this.button5.TabIndex = 15;
             this.button5.Text = "Cancel";
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
@@ -457,7 +464,7 @@
             this.textBox9.Location = new System.Drawing.Point(704, 24);
             this.textBox9.Name = "textBox9";
             this.textBox9.Size = new System.Drawing.Size(56, 25);
-            this.textBox9.TabIndex = 15;
+            this.textBox9.TabIndex = 17;
             this.textBox9.TextChanged += new System.EventHandler(this.textBox9_TextChanged);
             this.textBox9.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox9_KeyDown);
             // 
@@ -467,7 +474,7 @@
             this.textBox10.Location = new System.Drawing.Point(840, 24);
             this.textBox10.Name = "textBox10";
             this.textBox10.Size = new System.Drawing.Size(56, 25);
-            this.textBox10.TabIndex = 17;
+            this.textBox10.TabIndex = 19;
             this.textBox10.TextChanged += new System.EventHandler(this.textBox10_TextChanged);
             this.textBox10.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox10_KeyDown);
             // 
@@ -479,7 +486,7 @@
             this.radioButton1.Location = new System.Drawing.Point(640, 24);
             this.radioButton1.Name = "radioButton1";
             this.radioButton1.Size = new System.Drawing.Size(54, 21);
-            this.radioButton1.TabIndex = 14;
+            this.radioButton1.TabIndex = 16;
             this.radioButton1.TabStop = true;
             this.radioButton1.Text = "Toko";
             this.radioButton1.UseVisualStyleBackColor = true;
@@ -492,7 +499,7 @@
             this.radioButton2.Location = new System.Drawing.Point(768, 24);
             this.radioButton2.Name = "radioButton2";
             this.radioButton2.Size = new System.Drawing.Size(72, 21);
-            this.radioButton2.TabIndex = 16;
+            this.radioButton2.TabIndex = 18;
             this.radioButton2.Text = "Gudang";
             this.radioButton2.UseVisualStyleBackColor = true;
             this.radioButton2.CheckedChanged += new System.EventHandler(this.radioButton2_CheckedChanged);
@@ -529,9 +536,45 @@
             this.groupBox1.Location = new System.Drawing.Point(8, 120);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(920, 128);
-            this.groupBox1.TabIndex = 9;
+            this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Input";
+            // 
+            // textBox15
+            // 
+            this.textBox15.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox15.Location = new System.Drawing.Point(808, 88);
+            this.textBox15.Name = "textBox15";
+            this.textBox15.Size = new System.Drawing.Size(88, 25);
+            this.textBox15.TabIndex = 23;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label19.Location = new System.Drawing.Point(672, 96);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(135, 13);
+            this.label19.TabIndex = 22;
+            this.label19.Text = "Batas Notifikasi Gudang:";
+            // 
+            // textBox16
+            // 
+            this.textBox16.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox16.Location = new System.Drawing.Point(808, 56);
+            this.textBox16.Name = "textBox16";
+            this.textBox16.Size = new System.Drawing.Size(88, 25);
+            this.textBox16.TabIndex = 21;
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label20.Location = new System.Drawing.Point(672, 64);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(122, 13);
+            this.label20.TabIndex = 20;
+            this.label20.Text = "Pengambilan Gudang:";
             // 
             // groupBox2
             // 
@@ -551,7 +594,7 @@
             this.groupBox2.Location = new System.Drawing.Point(1128, 336);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(216, 248);
-            this.groupBox2.TabIndex = 12;
+            this.groupBox2.TabIndex = 15;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Kalkulator";
             // 
@@ -668,7 +711,7 @@
             this.button7.Location = new System.Drawing.Point(1128, 256);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(216, 64);
-            this.button7.TabIndex = 11;
+            this.button7.TabIndex = 14;
             this.button7.Text = "Kalkulator";
             this.button7.UseVisualStyleBackColor = true;
             this.button7.Click += new System.EventHandler(this.button7_Click);
@@ -680,7 +723,7 @@
             this.label17.Location = new System.Drawing.Point(1128, 136);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(208, 23);
-            this.label17.TabIndex = 20;
+            this.label17.TabIndex = 11;
             this.label17.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label18
@@ -690,7 +733,7 @@
             this.label18.Location = new System.Drawing.Point(1128, 168);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(208, 23);
-            this.label18.TabIndex = 21;
+            this.label18.TabIndex = 12;
             this.label18.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // button8
@@ -700,7 +743,7 @@
             this.button8.Location = new System.Drawing.Point(1264, 656);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(75, 32);
-            this.button8.TabIndex = 22;
+            this.button8.TabIndex = 17;
             this.button8.Text = "Cetak Ulang Gudang";
             this.button8.UseVisualStyleBackColor = true;
             this.button8.Click += new System.EventHandler(this.button8_Click_1);
@@ -712,52 +755,77 @@
             this.button10.Location = new System.Drawing.Point(1184, 656);
             this.button10.Name = "button10";
             this.button10.Size = new System.Drawing.Size(75, 32);
-            this.button10.TabIndex = 23;
+            this.button10.TabIndex = 16;
             this.button10.Text = "Cetak Ulang Toko";
             this.button10.UseVisualStyleBackColor = true;
             this.button10.Click += new System.EventHandler(this.button10_Click);
             // 
-            // textBox15
+            // groupBox3
             // 
-            this.textBox15.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox15.Location = new System.Drawing.Point(808, 88);
-            this.textBox15.Name = "textBox15";
-            this.textBox15.Size = new System.Drawing.Size(88, 25);
-            this.textBox15.TabIndex = 27;
+            this.groupBox3.Controls.Add(this.textBox17);
+            this.groupBox3.Controls.Add(this.label21);
+            this.groupBox3.Controls.Add(this.dateTimePicker1);
+            this.groupBox3.Controls.Add(this.radioButton4);
+            this.groupBox3.Controls.Add(this.radioButton3);
+            this.groupBox3.Enabled = false;
+            this.groupBox3.Location = new System.Drawing.Point(624, 8);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(496, 112);
+            this.groupBox3.TabIndex = 8;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Pembayaran";
             // 
-            // label19
+            // radioButton3
             // 
-            this.label19.AutoSize = true;
-            this.label19.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label19.Location = new System.Drawing.Point(672, 96);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(135, 13);
-            this.label19.TabIndex = 26;
-            this.label19.Text = "Batas Notifikasi Gudang:";
+            this.radioButton3.AutoSize = true;
+            this.radioButton3.Checked = true;
+            this.radioButton3.Location = new System.Drawing.Point(24, 24);
+            this.radioButton3.Name = "radioButton3";
+            this.radioButton3.Size = new System.Drawing.Size(52, 17);
+            this.radioButton3.TabIndex = 0;
+            this.radioButton3.TabStop = true;
+            this.radioButton3.Text = "Tunai";
+            this.radioButton3.UseVisualStyleBackColor = true;
             // 
-            // textBox16
+            // radioButton4
             // 
-            this.textBox16.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox16.Location = new System.Drawing.Point(808, 56);
-            this.textBox16.Name = "textBox16";
-            this.textBox16.Size = new System.Drawing.Size(88, 25);
-            this.textBox16.TabIndex = 25;
+            this.radioButton4.AutoSize = true;
+            this.radioButton4.Location = new System.Drawing.Point(96, 24);
+            this.radioButton4.Name = "radioButton4";
+            this.radioButton4.Size = new System.Drawing.Size(52, 17);
+            this.radioButton4.TabIndex = 1;
+            this.radioButton4.Text = "Kredit";
+            this.radioButton4.UseVisualStyleBackColor = true;
             // 
-            // label20
+            // dateTimePicker1
             // 
-            this.label20.AutoSize = true;
-            this.label20.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label20.Location = new System.Drawing.Point(672, 64);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(122, 13);
-            this.label20.TabIndex = 24;
-            this.label20.Text = "Pengambilan Gudang:";
+            this.dateTimePicker1.Location = new System.Drawing.Point(160, 24);
+            this.dateTimePicker1.Name = "dateTimePicker1";
+            this.dateTimePicker1.Size = new System.Drawing.Size(200, 20);
+            this.dateTimePicker1.TabIndex = 2;
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(16, 64);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(62, 13);
+            this.label21.TabIndex = 3;
+            this.label21.Text = "Keterangan";
+            // 
+            // textBox17
+            // 
+            this.textBox17.Location = new System.Drawing.Point(88, 64);
+            this.textBox17.Name = "textBox17";
+            this.textBox17.Size = new System.Drawing.Size(400, 20);
+            this.textBox17.TabIndex = 4;
             // 
             // PembelianForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1350, 701);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.button10);
             this.Controls.Add(this.button8);
             this.Controls.Add(this.label18);
@@ -787,6 +855,8 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -857,5 +927,11 @@
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.TextBox textBox16;
         private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.TextBox textBox17;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.DateTimePicker dateTimePicker1;
+        private System.Windows.Forms.RadioButton radioButton4;
+        private System.Windows.Forms.RadioButton radioButton3;
     }
 }

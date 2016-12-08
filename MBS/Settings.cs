@@ -39,7 +39,7 @@ namespace MBS
             SQLiteCommand command2 = new SQLiteCommand(sql2, conn);
             command2.ExecuteNonQuery();
 
-            string sql4 = "CREATE TABLE IF NOT EXISTS etc(enableadmin integer, poledisplay integer, printer varchar(50), printerbarcode varchar(50))";
+            string sql4 = "CREATE TABLE IF NOT EXISTS etc(enableadmin integer, poledisplay integer, jatuhtemporeminder integer, printer varchar(50), printerbarcode varchar(50))";
             SQLiteCommand command4 = new SQLiteCommand(sql4, conn);
             command4.ExecuteNonQuery();
 
@@ -101,6 +101,15 @@ namespace MBS
                 else
                 {
                     checkBox2.Checked = true;
+                }
+
+                if (readeretc["jatuhtemporeminder"].ToString() == "0")
+                {
+                    checkBox3.Checked = false;
+                }
+                else
+                {
+                    checkBox3.Checked = true;
                 }
 
                 textBox9.Text = readeretc["printer"].ToString();
@@ -263,7 +272,17 @@ namespace MBS
                 poledisplay = "0";
             }
 
-            string sql = "INSERT INTO etc VALUES ('"+ enableadmin +"', '"+ poledisplay +"','"+ textBox9.Text +"','" + textBox10.Text + "')";
+            string jatuhtemporeminder;
+            if (checkBox3.Checked == true)
+            {
+                jatuhtemporeminder = "1";
+            }
+            else
+            {
+                jatuhtemporeminder = "0";
+            }
+
+            string sql = "INSERT INTO etc VALUES ('"+ enableadmin +"', '"+ poledisplay + "', '" + jatuhtemporeminder + "','" + textBox9.Text +"','" + textBox10.Text + "')";
             SQLiteCommand command = new SQLiteCommand(sql, conn);
             command.ExecuteNonQuery();
 

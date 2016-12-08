@@ -15,6 +15,7 @@ namespace MBS
         public static bool poledisplay;
         public static string printer;
         public static string printerbarcode;
+        public static bool jatuhtemporeminder;
 
         public static string emailusername, emailpassword, emailrecipient;
 
@@ -28,6 +29,7 @@ namespace MBS
                 poledisplay = getPoleDisplay();
                 printer = getPrinter();
                 printerbarcode = getPrinterBarcode();
+                jatuhtemporeminder = getJatuhTempoReminder();
                 getEmailSettings();
 
                 getMySQLConnection(local1);
@@ -123,6 +125,30 @@ namespace MBS
             while (reader.Read())
             {
                 if (reader["poledisplay"].ToString() == "1")
+                {
+                    result = true;
+                }
+            }
+
+            reader.Close();
+            conn.Close();
+
+            return result;
+        }
+
+        public static bool getJatuhTempoReminder()
+        {
+            bool result = false;
+            SQLiteConnection conn = new SQLiteConnection("Data Source=settings.sqlite;Version=3;");
+            conn.Open();
+
+            string sql = "SELECT jatuhtemporeminder FROM etc";
+            SQLiteCommand command = new SQLiteCommand(sql, conn);
+            SQLiteDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                if (reader["jatuhtemporeminder"].ToString() == "1")
                 {
                     result = true;
                 }
