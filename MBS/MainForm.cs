@@ -311,19 +311,7 @@ namespace MBS
 
         private void button11_Click(object sender, EventArgs e)
         {
-            string mailbody = "";
-            int count = 0;
-            count = Convert.ToInt32(App.executeScalar("SELECT COUNT(*) FROM pembeliancompact WHERE JatuhTempo = '" + DateTime.Now.ToShortDateString() + "' AND Lunas = 'Belum Lunas'"));
-            if (count > 0)
-            {
-                DataTable dt = App.executeReader("SELECT * FROM pembeliancompact WHERE JatuhTempo = '" + DateTime.Now.ToShortDateString() + "' AND Lunas = 'Belum Lunas'");
-                foreach (DataRow row in dt.Rows)
-                {
-                    mailbody += row[0] + " " + row[1] + " " + row[2] + " " + App.strtomoney(row[3].ToString()) + " " + row[4] + " " + row[5] + " " + row[6] + " " + "\n";
-                }
-                App.sendEmail("Utang Jatuh Tempo", mailbody);
-                MessageBox.Show(mailbody);
-            }
+
         }
     }
 }

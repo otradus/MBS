@@ -103,7 +103,7 @@ namespace MBS
             }
         }
 
- 
+
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
             textBox2.CharacterCasing = CharacterCasing.Upper;
@@ -222,70 +222,85 @@ namespace MBS
 
         private void button6_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            DialogResult result = MessageBox.Show("Simpan dan cetak Pembelian?", "Pembelian Selesai", MessageBoxButtons.OKCancel);
+            if (result == DialogResult.OK)
             {
-                //INSERT INTO pembelian
-                string sql = string.Format("INSERT INTO pembelian VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}')",
-                    DateTime.Now.ToShortDateString(),
-                    DateTime.Now.ToShortDateString() + "-" + textBox1.Text,
-                    comboBox1.Text,
-                    dataGridView1[1, i].Value.ToString(),
-                    dataGridView1[2, i].Value.ToString(),
-                    dataGridView1[5, i].Value.ToString(),
-                    App.stripMoney(dataGridView1[6, i].Value.ToString()),
-                    App.stripMoney(dataGridView1[8, i].Value.ToString())
-                    );
+                if (dataGridView1.RowCount > 0)
+                {
+                    for (int i = 0; i < dataGridView1.Rows.Count; i++)
+                    {
+                        //INSERT INTO pembelian
+                        string sql = string.Format("INSERT INTO pembelian VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}')",
+                            DateTime.Now.ToShortDateString(),
+                            DateTime.Now.ToShortDateString() + "-" + textBox1.Text,
+                            comboBox1.Text,
+                            dataGridView1[1, i].Value.ToString(),
+                            dataGridView1[2, i].Value.ToString(),
+                            dataGridView1[5, i].Value.ToString(),
+                            App.stripMoney(dataGridView1[6, i].Value.ToString()),
+                            App.stripMoney(dataGridView1[8, i].Value.ToString())
+                            );
 
-                App.executeNonQuery(sql);
+                        App.executeNonQuery(sql);
 
 
-                //UPDATE barang
-                string sqlupdate = "UPDATE barang SET HargaBeli = '" + App.stripMoney(dataGridView1[6, i].Value.ToString()) + "', HargaJual = '" + App.stripMoney(dataGridView1[7, i].Value.ToString()) + "',Jumlah = Jumlah + '" + dataGridView1[9, i].Value.ToString() + "', Gudang = Gudang + '" + dataGridView1[10, i].Value.ToString() + "' WHERE KodeBarang = '" + dataGridView1[1, i].Value.ToString() + "'";
+                        //UPDATE barang
+                        string sqlupdate = "UPDATE barang SET HargaBeli = '" + App.stripMoney(dataGridView1[6, i].Value.ToString()) + "', HargaJual = '" + App.stripMoney(dataGridView1[7, i].Value.ToString()) + "',Jumlah = Jumlah + '" + dataGridView1[9, i].Value.ToString() + "', Gudang = Gudang + '" + dataGridView1[10, i].Value.ToString() + "' WHERE KodeBarang = '" + dataGridView1[1, i].Value.ToString() + "'";
 
-                App.executeNonQuery(sqlupdate);
+                        App.executeNonQuery(sqlupdate);
 
-                //MessageBox.Show(sql);
-                //MessageBox.Show(sqlupdate);
+                        //MessageBox.Show(sql);
+                        //MessageBox.Show(sqlupdate);
+                    }
+
+                    string jatuhtempo, lunas;
+                    if (radioButton3.Checked == true)
+                    {
+                        jatuhtempo = "Tunai";
+                        lunas = "LUNAS";
+                    }
+                    else
+                    {
+                        jatuhtempo = dateTimePicker1.Value.ToShortDateString();
+                        lunas = "Belum Lunas";
+                    }
+
+                    //INSERT INTO pembeliancompact
+                    string sqlcompact = string.Format("INSERT INTO pembeliancompact VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}')",
+                            DateTime.Now.ToShortDateString(),
+                            DateTime.Now.ToShortDateString() + "-" + textBox1.Text,
+                            comboBox1.Text,
+                            App.stripMoney(label2.Text),
+                            jatuhtempo,
+                            textBox17.Text,
+                            lunas
+                            );
+
+                    App.executeNonQuery(sqlcompact);
+
+                    MessageBox.Show("Pembelian berhasil dimasukkan.");
+
+                    //App.printPembelian(DateTime.Now.ToShortDateString() + "-" + textBox1.Text, false);
+                    if (printMe("Toko") == true)
+                    {
+                        printPembelianToko();
+                    }
+
+                    if (printMe("Gudang") == true)
+                    {
+                        printPembelianGudang();
+                    }
+
+                    printKontraBon();
+                    Close();
+
+                }
+                else
+                {
+                    MessageBox.Show("Daftar pembelian masih kosong...!");
+                }
+
             }
-
-            string jatuhtempo, lunas;
-            if (radioButton3.Checked == true)
-            {
-                jatuhtempo = "Tunai";
-                lunas = "LUNAS";
-            }
-            else
-            {
-                jatuhtempo = dateTimePicker1.Value.ToShortDateString();
-                lunas = "Belum Lunas";
-            }
-
-            //INSERT INTO pembeliancompact
-            string sqlcompact = string.Format("INSERT INTO pembeliancompact VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}')",
-                    DateTime.Now.ToShortDateString(),
-                    DateTime.Now.ToShortDateString() + "-" + textBox1.Text,
-                    comboBox1.Text,
-                    App.stripMoney(label2.Text),
-                    jatuhtempo,
-                    textBox17.Text,
-                    lunas
-                    );
-
-            App.executeNonQuery(sqlcompact);
-
-            MessageBox.Show("Pembelian berhasil dimasukkan.");
-
-            //App.printPembelian(DateTime.Now.ToShortDateString() + "-" + textBox1.Text, false);
-            if (printMe("Toko") == true)
-            {
-                printPembelianToko();
-            }
-
-            if (printMe("Gudang") == true)
-            {
-                printPembelianGudang();
-            }
-            Close();
         }
 
         private void calculateTotal()
@@ -577,6 +592,47 @@ namespace MBS
                 textBox7.Text = App.strtomoney(App.stripMoney(label14.Text));
                 textBox8.Focus();
             }
+        }
+
+        private void printKontraBon()
+        {
+            DateTime tgl = DateTime.Now;
+
+            //PRINT INVOICE
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine(Convert.ToChar(27) + "a1" + Convert.ToChar(27) + "!4" + "Kontra Bon BABY");
+            sb.AppendLine(Convert.ToChar(27) + "@");
+            sb.AppendLine("Faktur: " + label10.Text + " " + textBox1.Text);
+            sb.AppendLine("Tanggal: " + tgl.ToShortDateString() + " Jam: " + tgl.ToShortTimeString());
+            sb.AppendLine("");
+            sb.AppendLine("========================================");
+            sb.AppendLine("");
+            if (radioButton3.Checked == false)
+            {
+                sb.AppendLine(Convert.ToChar(27) + "a1" + Convert.ToChar(27) + "!4" + "Jatuh Tempo:");
+                sb.AppendLine(dateTimePicker1.Value.ToShortDateString());
+                sb.AppendLine(Convert.ToChar(27) + "@");
+
+            }
+            else
+            {
+                sb.AppendLine(Convert.ToChar(27) + "a1" + Convert.ToChar(27) + "!4" + "LUNAS");
+                sb.AppendLine(Convert.ToChar(27) + "@");
+            }
+            sb.AppendLine("");
+            sb.AppendLine("Keterangan:");
+            sb.AppendLine(textBox17.Text);
+
+            sb.AppendLine("-----------------------------------------");
+            sb.AppendLine("");
+
+            sb.AppendLine(Convert.ToChar(29) + "VA0");
+
+
+            System.IO.File.WriteAllText(@"C:\test\invoicepembeliankontrabon.txt", sb.ToString());
+
+            App.shellCommand("copy c:\\test\\invoicepembeliankontrabon.txt " + Args.printer);
+
         }
 
         private void printPembelianToko()

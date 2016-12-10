@@ -159,6 +159,20 @@ namespace MBS
             }
         }
 
+        public static string strtomoneyasset(string str)
+        {
+            //return "Rp" + str.Replace(",", ".");
+            try
+            {
+                return String.Format("{0:C0}", Convert.ToDecimal(str));
+
+            }
+            catch (Exception)
+            {
+                return "";
+            }
+        }
+
         public static double moneytodouble(string str)
         {
             try
