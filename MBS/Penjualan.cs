@@ -14,7 +14,7 @@ namespace MBS
     public partial class Penjualan : Form
     {
         public static string user;
-        public static bool retur = false;
+        public bool retur = false;
         public bool selesai = false;
 
         public Penjualan(string user1)
@@ -379,6 +379,7 @@ namespace MBS
                     retur = true;
                     this.BackColor = Color.Maroon;
                     button1.Text = "!RETUR!";
+
                     textBox1.Focus();
                 }
                 else
@@ -391,6 +392,13 @@ namespace MBS
                 retur = false;
                 this.BackColor = default(Color);
                 button1.Text = "RETUR";
+
+                label9.Enabled = false;
+                textBox4.Enabled = false;
+                label9.Visible = false;
+                textBox4.Visible = false;
+
+
                 textBox1.Focus();
             }
         }

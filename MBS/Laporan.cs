@@ -72,6 +72,12 @@ namespace MBS
             comboBox4.Text = DateTime.Now.ToShortDateString().Substring(3, 2);
             textBox5.Text = DateTime.Now.Year.ToString();
 
+            //Users
+            //Asset
+            App.formatDataGridView(dataGridView9);
+            App.DoubleBuffered(dataGridView9, true);
+            App.autoResizeDataGridView(dataGridView9);
+
         }
 
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
@@ -503,19 +509,25 @@ namespace MBS
             chart1.Series.Add("Pembelian");
             chart1.Series["Penjualan"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Column;
             chart1.Series["Pembelian"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Column;
+            chart1.Series["Penjualan"].IsValueShownAsLabel = true;
+            chart1.Series["Pembelian"].IsValueShownAsLabel = true;
 
-            DataTable dtTanggal = App.executeReader("SELECT DISTINCT Tanggal FROM penjualancompact WHERE Tanggal LIKE '%"+ comboBox4.Text + "/" + textBox5.Text +"'");
+
+
+            DataTable dtTanggal = App.executeReader("SELECT DISTINCT Tanggal FROM penjualancompact WHERE Tanggal LIKE '%" + comboBox4.Text + "/" + textBox5.Text + "'");
             foreach (DataRow rowtanggal in dtTanggal.Rows)
             {
-                
+
 
                 double dtPenjualan = Convert.ToDouble(App.executeScalar("SELECT SUM(Total) FROM penjualancompact WHERE Tanggal = '" + rowtanggal[0].ToString() + "'").ToString());
                 chart1.Series["Penjualan"].Points.AddXY(rowtanggal[0].ToString(), dtPenjualan);
+                chart1.Series["Penjualan"].Label = "#VALY{###,###,###}";
 
                 try
                 {
                     double dtPembelian = Convert.ToDouble(App.executeScalar("SELECT SUM(Total) FROM pembeliancompact WHERE Tanggal = '" + rowtanggal[0].ToString() + "'").ToString());
                     chart1.Series["Pembelian"].Points.AddXY(rowtanggal[0].ToString(), dtPembelian);
+                    chart1.Series["Pembelian"].Label = "#VALY{###,###,###}";
                 }
                 catch (Exception)
                 {
@@ -523,6 +535,85 @@ namespace MBS
 
             }
 
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            chart1.Series.Clear();
+            chart1.Series.Add("Penjualan");
+            chart1.Series["Penjualan"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Column;
+            chart1.Series["Penjualan"].IsValueShownAsLabel = true;
+            chart1.ChartAreas[0].AxisX.LabelStyle.Interval = 1;
+            chart1.ChartAreas[0].AxisY.LabelStyle.Format = "{0:C0}";
+
+            DataTable dtTanggal = App.executeReader("SELECT DISTINCT Name FROM Users");
+            foreach (DataRow rowuser in dtTanggal.Rows)
+            {
+                try
+                {
+                    double dtPenjualan = Convert.ToDouble(App.executeScalar("SELECT SUM(Total) FROM penjualancompact WHERE User = '" + rowuser[0].ToString() + "' AND Tanggal LIKE '%" + comboBox4.Text + "/" + textBox5.Text + "'").ToString());
+                    chart1.Series["Penjualan"].Points.AddXY(rowuser[0].ToString(), dtPenjualan);
+                    chart1.Series["Penjualan"].Label = "#VALY{Rp###,###,###}";
+                }
+                catch (Exception)
+                {
+                }
+            }
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            loadUsers();
+        }
+
+        private void loadUsers()
+        {
+            dataGridView9.Rows.Clear();
+            DataTable dt = App.executeReader("SELECT ID, Name FROM users ORDER BY ID");
+            foreach (DataRow row in dt.Rows)
+            {
+                dataGridView9.Rows.Add(row[0].ToString(), row[1].ToString());
+            }
+        }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            if (dataGridView9.CurrentCell.RowIndex != -1)
+            {
+                DialogResult result = MessageBox.Show("Hapus user ini? " + dataGridView9[1, dataGridView9.CurrentCell.RowIndex].Value.ToString(), "Hapus", MessageBoxButtons.OKCancel);
+                if (result == DialogResult.OK)
+                {
+                    App.executeNonQuery("DELETE FROM Users WHERE Name = '"+ dataGridView9[1,dataGridView9.CurrentCell.RowIndex].Value.ToString() +"'");
+                    loadUsers();
+                    MessageBox.Show("User berhasil dihapus");
+                }
+            }
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            if (groupBox1.Enabled == false)
+            {
+                groupBox1.Enabled = true;
+            }
+            else
+            {
+                groupBox1.Enabled = false;
+            }
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            if (textBox6.Text != "" && textBox7.Text != "")
+            {
+                DialogResult result = MessageBox.Show("Simpan user ini?", "Simpan", MessageBoxButtons.OKCancel);
+                if (result == DialogResult.OK)
+                {
+                    App.executeNonQuery("INSERT INTO users SET ID = '" + textBox6.Text + "', Name ='" + textBox7.Text + "'");
+                    loadUsers();
+                    MessageBox.Show("User berhasil disimpan");
+                }
+            }
         }
     }
 }
