@@ -367,6 +367,57 @@ namespace MBS
 
         }
 
+        public static void printServisCacad(string tanggal, string sales, string jenis, string keterangan, string nama, string telp)
+        {
+            DateTime tgl = DateTime.Now;
+            DataTable rs;
+
+            if (jenis == "Servis")
+            {
+                rs = executeReader("SELECT * FROM retur WHERE Tanggal = '" + tanggal + "' AND Alasan = '" + keterangan + " Nama: " + nama + " Telp: " + telp + "'");
+            }
+            else
+            {
+                rs = executeReader("SELECT * FROM retur WHERE Tanggal = '" + tanggal + "' AND Alasan = '" + keterangan + "'");
+            }
+
+            //PRINT INVOICE
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine(Convert.ToChar(27) + "a1" + Convert.ToChar(27) + "!4" + "Baby");
+            sb.AppendLine(jenis);
+            sb.AppendLine(Convert.ToChar(27) + "@");
+            sb.AppendLine("User: " + sales);
+            sb.AppendLine("Tanggal: " + tanggal);
+            sb.AppendLine("");
+            sb.AppendLine("Keterangan: " + keterangan);
+            if (nama != "" || telp != "")
+            {
+                sb.AppendLine("Nama: " + nama + " Telp: " + telp);
+            }
+            sb.AppendLine("========================================");
+
+            int qty = 0;
+            int i = 1;
+            foreach (DataRow row in rs.Rows)
+            {
+                sb.AppendLine(Left((i.ToString() + ". " + row[3].ToString() + "..." + row[4].ToString()), 40));
+                qty += Convert.ToInt32(row[4]);
+                i += 1;
+            }
+
+            sb.AppendLine("----------------------------------------");
+            //TODO: Total money space length
+            sb.AppendLine("   Qty: " + qty.ToString());
+            sb.AppendLine("");
+
+            sb.AppendLine(Convert.ToChar(29) + "VA0");
+
+
+            System.IO.File.WriteAllText(@"C:\test\invoiceserviscacad.txt", sb.ToString());
+
+            shellCommand("copy c:\\test\\invoiceserviscacad.txt " + Args.printer);
+
+        }
 
         public static void poleDisplay(string string1, string string2)
         {

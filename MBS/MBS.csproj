@@ -139,6 +139,12 @@
     <Compile Include="PembelianForm.Designer.cs">
       <DependentUpon>PembelianForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ServisCacad.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ServisCacad.Designer.cs">
+      <DependentUpon>ServisCacad.cs</DependentUpon>
+    </Compile>
     <Compile Include="Penjualan.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -203,6 +209,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="PembelianForm.resx">
       <DependentUpon>PembelianForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServisCacad.resx">
+      <DependentUpon>ServisCacad.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Penjualan.resx">
       <DependentUpon>Penjualan.cs</DependentUpon>

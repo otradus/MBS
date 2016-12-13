@@ -73,11 +73,17 @@ namespace MBS
             textBox5.Text = DateTime.Now.Year.ToString();
 
             //Users
-            //Asset
             App.formatDataGridView(dataGridView9);
             App.DoubleBuffered(dataGridView9, true);
             App.autoResizeDataGridView(dataGridView9);
 
+            //ServisCacad
+            App.formatDataGridView(dataGridView10);
+            App.DoubleBuffered(dataGridView10, true);
+            App.autoResizeDataGridView(dataGridView10);
+
+            comboBox5.Text = DateTime.Now.ToShortDateString().Substring(3, 2);
+            textBox8.Text = DateTime.Now.Year.ToString();
         }
 
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
@@ -583,7 +589,7 @@ namespace MBS
                 DialogResult result = MessageBox.Show("Hapus user ini? " + dataGridView9[1, dataGridView9.CurrentCell.RowIndex].Value.ToString(), "Hapus", MessageBoxButtons.OKCancel);
                 if (result == DialogResult.OK)
                 {
-                    App.executeNonQuery("DELETE FROM Users WHERE Name = '"+ dataGridView9[1,dataGridView9.CurrentCell.RowIndex].Value.ToString() +"'");
+                    App.executeNonQuery("DELETE FROM Users WHERE Name = '" + dataGridView9[1, dataGridView9.CurrentCell.RowIndex].Value.ToString() + "'");
                     loadUsers();
                     MessageBox.Show("User berhasil dihapus");
                 }
@@ -613,6 +619,112 @@ namespace MBS
                     loadUsers();
                     MessageBox.Show("User berhasil disimpan");
                 }
+            }
+        }
+
+        private void loadServisCacad(bool semuayangbelumselesai)
+        {
+            dataGridView10.Rows.Clear();
+
+            DataTable dt;
+            if (semuayangbelumselesai == true)
+            {
+                dt = App.executeReader("SELECT * FROM retur WHERE Status = 'Belum Selesai'");
+            }
+            else
+            {
+                dt = App.executeReader("SELECT * FROM retur WHERE Tanggal LIKE '%" + comboBox5.Text + "/" + textBox8.Text + "'");
+            }
+
+            foreach (DataRow row in dt.Rows)
+            {
+                dataGridView10.Rows.Add(row[0].ToString(), row[1].ToString(), row[2].ToString(), row[3].ToString(), row[4].ToString(), App.strtomoney(row[5].ToString()), App.strtomoney(row[6].ToString()), row[7].ToString(), row[8].ToString(), row[9].ToString());
+            }
+        }
+
+        private void button14_Click(object sender, EventArgs e)
+        {
+            loadServisCacad(true);
+        }
+
+        private void button13_Click(object sender, EventArgs e)
+        {
+            loadServisCacad(false);
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked == true)
+            {
+                checkBox1.Text = "SELESAI";
+                checkBox1.ForeColor = Color.Green;
+            }
+            else
+            {
+                checkBox1.Text = "Belum Selesai";
+                checkBox1.ForeColor = Color.Red;
+            }
+        }
+
+        private void dataGridView10_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            groupBox2.Enabled = true;
+
+            textBox9.Text = dataGridView10[0, dataGridView10.CurrentCell.RowIndex].Value.ToString();
+            textBox10.Text = dataGridView10[1, dataGridView10.CurrentCell.RowIndex].Value.ToString();
+            textBox11.Text = dataGridView10[2, dataGridView10.CurrentCell.RowIndex].Value.ToString();
+            textBox12.Text = dataGridView10[3, dataGridView10.CurrentCell.RowIndex].Value.ToString();
+            textBox13.Text = dataGridView10[4, dataGridView10.CurrentCell.RowIndex].Value.ToString();
+            textBox14.Text = App.strtomoneyasset(dataGridView10[5, dataGridView10.CurrentCell.RowIndex].Value.ToString());
+            textBox15.Text = App.strtomoneyasset(dataGridView10[6, dataGridView10.CurrentCell.RowIndex].Value.ToString());
+            textBox16.Text = dataGridView10[7, dataGridView10.CurrentCell.RowIndex].Value.ToString();
+            textBox17.Text = dataGridView10[8, dataGridView10.CurrentCell.RowIndex].Value.ToString();
+
+            if (dataGridView10[9,dataGridView10.CurrentCell.RowIndex].Value.ToString() == "SELESAI")
+            {
+                checkBox1.Checked = true;
+            }
+            else
+            {
+                checkBox1.Checked = false;
+            }
+
+            textBox17.Focus();
+
+        }
+
+        private void button15_Click(object sender, EventArgs e)
+        {
+            if (textBox17.Text != "")
+            {
+                string selesai;
+                if (checkBox1.Checked == true)
+                {
+                    selesai = "SELESAI";
+                }
+                else
+                {
+                    selesai = "Belum Selesai";
+                }
+
+                DialogResult result = MessageBox.Show("Ubah keterangan atau status barang ini?", "Keterangan", MessageBoxButtons.OKCancel);
+                if (result == DialogResult.OK)
+                {
+                    App.executeNonQuery("UPDATE retur SET Alasan = '" + textBox17.Text + "', Status = '" + selesai + "' WHERE Tanggal = '"+ textBox9.Text +"' AND Faktur = '"+ textBox10.Text +"' AND KodeBarang = '"+ textBox11.Text +"' AND User = '"+ textBox16.Text +"', AND Alasan = '"+ dataGridView10[8,dataGridView10.CurrentCell.RowIndex].Value.ToString() +"'");
+                    dataGridView10[8, dataGridView10.CurrentCell.RowIndex].Value = textBox17.Text;
+                    dataGridView10[9, dataGridView10.CurrentCell.RowIndex].Value = selesai;
+                    MessageBox.Show("Barang servis / cacad berhasil di update");
+
+                    groupBox2.Enabled = false;
+                }
+            }
+        }
+
+        private void Laporan_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                Close();
             }
         }
     }

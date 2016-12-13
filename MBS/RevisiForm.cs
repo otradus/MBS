@@ -111,5 +111,15 @@ namespace MBS
                 this.Close();
             }
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("Masuk ke jendela Servis / Cacad?", "Perhatian", MessageBoxButtons.OKCancel);
+            if (result == DialogResult.OK)
+            {
+                UserLoginForm userlogin = new UserLoginForm("ServisCacad");
+                userlogin.Show();
+            }
+        }
     }
 }

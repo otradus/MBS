@@ -45,12 +45,13 @@ namespace MBS
                         penjualan.ShowDialog();
                         this.Close();
                     }
-                    //else if (destination == "Pembelian")
-                    //{
-                    //    PembelianForm pembelian = new PembelianForm(Convert.ToString(result));
-                    //    pembelian.ShowDialog();
-                    //    this.Close();
-                    //}
+
+                    else if (destination == "ServisCacad")
+                    {
+                        ServisCacad pembelian = new ServisCacad(Convert.ToString(result));
+                        pembelian.ShowDialog();
+                        this.Close();
+                    }
                 }
                 else
                 {

@@ -11,13 +11,13 @@ using System.Windows.Forms;
 
 namespace MBS
 {
-    public partial class Penjualan : Form
+    public partial class ServisCacad : Form
     {
         public static string user;
         public bool retur = false;
         public bool selesai = false;
 
-        public Penjualan(string user1)
+        public ServisCacad(string user1)
         {
             user = user1;
             InitializeComponent();
@@ -30,7 +30,7 @@ namespace MBS
 
             App.formatDataGridView(dataGridView1);
             App.DoubleBuffered(dataGridView1, true);
-            ActiveControl = textBox1;
+            ActiveControl = textBox4;
         }
 
         public void inputPenjualan()
@@ -243,159 +243,133 @@ namespace MBS
 
         private void button3_Click(object sender, EventArgs e)
         {
-            if (selesai == false)
+            if (textBox4.Text != "" && (radioButton1.Checked == true || radioButton2.Checked == true))
             {
-                if (dataGridView1.RowCount != 0)
+                if (selesai == false)
                 {
-                    DateTime tgl = DateTime.Now;
-                    MySqlConnection conn = new MySqlConnection(App.getConnectionString());
-                    MySqlCommand cmd = new MySqlCommand();
-
-                    string lastfaktur = App.getFaktur(tgl);
-
-                    try
+                    if (dataGridView1.RowCount != 0)
                     {
-                        conn.Open();
-                        cmd.Connection = conn;
+                        DateTime tgl = DateTime.Now;
+                        MySqlConnection conn = new MySqlConnection(App.getConnectionString());
+                        MySqlCommand cmd = new MySqlCommand();
 
-                        string kode;
-                        string nama;
-                        string jumlah;
-                        string harga;
-                        string subtotal;
-                        double total = 0;
-                        double laba = 0;
-                        double labatotal = 0;
+                        string lastfaktur = App.getFaktur(tgl);
 
-                        for (int i = 0; i < dataGridView1.RowCount; i++)
+                        try
                         {
-                            kode = dataGridView1[0, i].Value.ToString();
-                            nama = dataGridView1[1, i].Value.ToString();
-                            jumlah = dataGridView1[3, i].Value.ToString();
-                            harga = App.stripMoney(dataGridView1[4, i].Value.ToString());
-                            subtotal = App.stripMoney(dataGridView1[5, i].Value.ToString());
+                            conn.Open();
+                            cmd.Connection = conn;
 
-                            laba = (Convert.ToDouble(harga) - Convert.ToDouble(App.executeScalar("SELECT HargaBeli FROM barang WHERE KodeBarang = '" + kode + "'").ToString())) * Convert.ToDouble(jumlah);
+                            string kode;
+                            string nama;
+                            string jumlah;
+                            string harga;
+                            string subtotal;
+                            double total = 0;
 
-
-                            labatotal += laba;
-
-                            cmd.CommandText = "INSERT INTO penjualan SET Tanggal='" + tgl.ToShortDateString() + "', Faktur='" + lastfaktur + "',KodeBarang='" + kode + "',NamaBarang='" + nama + "',Jumlah='" + jumlah + "',Harga='" + harga + "',Subtotal='" + subtotal + "',Laba='" + laba + "'";
-                            cmd.ExecuteNonQuery();
-
-                            //check if jumlah = 0
-                            int cekjumlah = Convert.ToInt32(App.executeScalar("SELECT Jumlah FROM barang WHERE KodeBarang = '" + kode + "'"));
-                            if (cekjumlah - Convert.ToInt32(jumlah) >= 0)
+                            for (int i = 0; i < dataGridView1.RowCount; i++)
                             {
-                                cmd.CommandText = "UPDATE barang SET Jumlah = Jumlah - '" + jumlah + "' WHERE KodeBarang = '" + kode + "'";
+                                kode = dataGridView1[0, i].Value.ToString();
+                                nama = dataGridView1[1, i].Value.ToString();
+                                jumlah = dataGridView1[3, i].Value.ToString();
+                                harga = App.stripMoney(dataGridView1[4, i].Value.ToString());
+                                subtotal = App.stripMoney(dataGridView1[5, i].Value.ToString());
+
+
+                                string namaketerangan = "";
+                                string telpketerangan = "";
+                                if (textBox5.Text != "")
+                                {
+                                    namaketerangan = " Nama: " + textBox5.Text;
+                                }
+                                if (textBox6.Text != "")
+                                {
+                                    telpketerangan = " Telp: " + textBox6.Text;
+                                }
+
+                                cmd.CommandText = "INSERT INTO retur SET Tanggal='" + tgl.ToShortDateString() + "', Faktur='" + label1.Text + "',KodeBarang='" + kode + "',NamaBarang='" + nama + "',Jumlah='" + jumlah + "',Harga='" + harga + "',Subtotal='" + subtotal + "', User = '" + label2.Text + "', Alasan = '" + textBox4.Text + namaketerangan + telpketerangan + "', Status = 'Belum Selesai'";
+
                                 cmd.ExecuteNonQuery();
+
+
+                                if (radioButton2.Checked == true)
+                                {
+                                    //check if jumlah = 0
+                                    int cekjumlah = Convert.ToInt32(App.executeScalar("SELECT Jumlah FROM barang WHERE KodeBarang = '" + kode + "'"));
+                                    if (cekjumlah - Convert.ToInt32(jumlah) >= 0)
+                                    {
+                                        cmd.CommandText = "UPDATE barang SET Jumlah = Jumlah - '" + jumlah + "' WHERE KodeBarang = '" + kode + "'";
+                                        cmd.ExecuteNonQuery();
+                                    }
+                                    else
+                                    {
+                                        MessageBox.Show("PERHATIAN: Jumlah barang " + nama + " sudah 0 di komputer");
+                                        cmd.CommandText = "UPDATE barang SET Jumlah = '0' WHERE KodeBarang = '" + kode + "'";
+                                        cmd.ExecuteNonQuery();
+                                    }
+
+                                }
+
+                                total += App.cDouble(App.stripMoney(dataGridView1[5, i].Value.ToString()));
                             }
-                            else
-                            {
-                                MessageBox.Show("PERHATIAN: Jumlah barang " + nama + " sudah 0 di komputer");
-                                cmd.CommandText = "UPDATE barang SET Jumlah = '0' WHERE KodeBarang = '" + kode + "'";
-                                cmd.ExecuteNonQuery();
-                            }
 
 
-                            addLorisan(kode, nama, jumlah);
 
-                            total += App.cDouble(App.stripMoney(dataGridView1[5, i].Value.ToString()));
+                            conn.Close();
+
+                            selesai = true;
+
                         }
 
-                        cmd.CommandText = "INSERT INTO penjualancompact SET Tanggal='" + tgl.ToShortDateString() + "', Faktur='" + lastfaktur + "', User='" + user + "',Total='" + total + "',Laba='" + labatotal + "', Bayar='0'";
-                        cmd.ExecuteNonQuery();
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.ToString());
+                        }
+
+                        App.sendEmail("MBS " + label1.Text, mailBody());
+                        App.printServisCacad(DateTime.Now.ToShortDateString(), user, label1.Text, textBox4.Text, textBox5.Text, textBox6.Text);
 
 
-                        conn.Close();
+                        this.Close();
 
-                        selesai = true;
-
-                        App.poleDisplay("Maju Baby Shop", DateTime.Now.ToShortDateString());
                     }
-
-                    catch (Exception ex)
+                    else
                     {
-                        MessageBox.Show(ex.ToString());
+                        MessageBox.Show("Daftar masih kosong!");
                     }
-
-                    App.sendEmail("Penjualan MBS " + DateTime.Now.ToShortDateString(), mailBody());
-                    App.printPenjualan(lastfaktur, user);
-
-
-                    this.Close();
 
                 }
                 else
                 {
-                    MessageBox.Show("Penjualan masih kosong!");
+                    MessageBox.Show("Sudah selesai!");
+                    Close();
                 }
-
             }
             else
             {
-                MessageBox.Show("Penjualan sudah selesai!");
-                Close();
+                MessageBox.Show("Alasan atau pilihan servis cacad masih kosong!");
             }
+
         }
 
         private string mailBody()
         {
             string msg;
             msg = "Tanggal: " + DateTime.Now.ToShortDateString() + " Jam: " + DateTime.Now.ToShortTimeString() + "\n";
-            msg += "Faktur: " + label1.Text + " User: " + label2.Text + "\n\n";
+            msg += "User: " + label2.Text + "\n\n";
+            msg += "[" + label1.Text + "] Keterangan: " + textBox4.Text + " User: " + label2.Text + "\n\n";
 
-            msg += "Penjualan: " + label4.Text + "\n\n";
+            msg += label1.Text + label4.Text + "\n\n";
             for (int i = 0; i < dataGridView1.Rows.Count; i++)
             {
                 msg += dataGridView1[1, i].Value.ToString() + "\n";
                 msg += dataGridView1[3, i].Value.ToString() + " x " + dataGridView1[4, i].Value.ToString() + " = " + dataGridView1[5, i].Value.ToString() + "\n";
             }
 
-            msg += "\nTotal: " + App.strtomoney(App.executeScalar("SELECT SUM(Total) FROM penjualancompact WHERE Tanggal = '" + DateTime.Now.ToShortDateString() + "'").ToString());
-
             return msg;
         }
 
-        public void addLorisan(string kode, string nama, string jumlah)
-        {
-            DateTime tgl = DateTime.Now;
-            if (Convert.ToInt32(App.executeScalar("SELECT COUNT(*) FROM lorisan WHERE KodeBarang = '" + kode + "'")) == 0)
-            {
-                App.executeNonQuery("INSERT INTO lorisan SET Tanggal = '" + tgl.ToShortDateString() + "', KodeBarang = '" + kode + "', NamaBarang = '" + nama + "', Jumlah = '" + jumlah + "'");
-            }
-            else
-            {
-                App.executeNonQuery("UPDATE lorisan SET Jumlah = Jumlah + '" + jumlah + "' WHERE KodeBarang = '" + kode + "'");
-            }
-        }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            if (retur == false)
-            {
-                if (dataGridView1.Rows.Count > 0)
-                {
-                    retur = true;
-                    this.BackColor = Color.Maroon;
-                    button1.Text = "!RETUR!";
-
-                    textBox1.Focus();
-                }
-                else
-                {
-                    MessageBox.Show("Daftar penjualan masih kosong");
-                }
-            }
-            else
-            {
-                retur = false;
-                this.BackColor = default(Color);
-                button1.Text = "RETUR";
-
-                textBox1.Focus();
-            }
-        }
 
         private void addup()
         {
@@ -453,6 +427,20 @@ namespace MBS
                 button3.PerformClick();
             }
 
+        }
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            label1.Text = "Servis";
+            textBox5.Enabled = true;
+            textBox6.Enabled = true;
+        }
+
+        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        {
+            label1.Text = "Cacad";
+            textBox5.Enabled = false;
+            textBox6.Enabled = false;
         }
     }
 }
