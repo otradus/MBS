@@ -303,18 +303,71 @@ namespace MBS
             double total = 0;
             int qty = 0;
             int i = 1;
+
+            string spaces = "";
+            string spacestotal = "";
+
             foreach (DataRow row in rs.Rows)
             {
+
+                if (strtomoney(row[6].ToString()).Length == 7)
+                {
+                    spaces = "        ";
+                }
+                else if (strtomoney(row[6].ToString()).Length == 8)
+                {
+                    spaces = "       ";
+                }
+                else if (strtomoney(row[6].ToString()).Length == 9)
+                {
+                    spaces = "      ";
+                }
+                else if (strtomoney(row[6].ToString()).Length == 10)
+                {
+                    spaces = "     ";
+                }
+                else if (strtomoney(row[6].ToString()).Length == 11)
+                {
+                    spaces = "    ";
+                }
+
+
                 sb.AppendLine(Left((i.ToString() + ". " + row[3].ToString()), 40));
-                sb.AppendLine("   " + strtomoney(row[5].ToString()) + Convert.ToChar(9) + "x" + Convert.ToChar(9) + row[4].ToString() + Convert.ToChar(9) + strtomoney(row[6].ToString()));
+                sb.AppendLine("   " + strtomoney(row[5].ToString()) + Convert.ToChar(9) + "x" + Convert.ToChar(9) + row[4].ToString() + spaces + strtomoney(row[6].ToString()));
                 total += Convert.ToDouble(row[6]);
                 qty += Convert.ToInt32(row[4]);
                 i += 1;
+
+                if (strtomoney(total.ToString()).Length == 7)
+                {
+                    spacestotal = "                ";
+                }
+                else if (strtomoney(total.ToString()).Length == 8)
+                {
+                    spacestotal = "               ";
+                }
+                else if (strtomoney(total.ToString()).Length == 9)
+                {
+                    spacestotal = "              ";
+                }
+                else if (strtomoney(total.ToString()).Length == 10)
+                {
+                    spacestotal = "             ";
+                }
+                else if (strtomoney(total.ToString()).Length == 11)
+                {
+                    spacestotal = "            ";
+                }
+                else if (strtomoney(total.ToString()).Length == 12)
+                {
+                    spacestotal = "           ";
+                }
+
             }
 
             sb.AppendLine("----------------------------------------");
             //TODO: Total money space length
-            sb.AppendLine("   Qty: " + qty.ToString() + Convert.ToChar(9) + "       TOTAL: " + strtomoney(total.ToString()));
+            sb.AppendLine("   Qty: " + qty.ToString() + spacestotal + "TOTAL: " + strtomoney(total.ToString()));
             sb.AppendLine("");
 
             sb.AppendLine(Convert.ToChar(29) + "VA0");
