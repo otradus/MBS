@@ -44,6 +44,7 @@ namespace MBS
             if (Args.admin == false)
             {
                 button2.Enabled = false;
+                button3.Enabled = false;
             }
 
             loadOpname();
@@ -63,17 +64,18 @@ namespace MBS
             }
 
             int jumlah = 0;
+            jumlah = Convert.ToInt32(App.executeScalar("SELECT Jumlah FROM Opname WHERE KodeBarang = '" + textBox1.Text + "'"));
 
             if (textBox1.Text != "" && label3.Text != "")
             {
 
                 if (textBox2.Text == "0" || textBox2.Text == "")
                 {
-                    jumlah = 1;
+                    jumlah = jumlah + 1;
                 }
                 else
                 {
-                    jumlah = Convert.ToInt32(textBox2.Text);
+                    jumlah = jumlah + Convert.ToInt32(textBox2.Text);
                 }
 
 
@@ -174,6 +176,17 @@ namespace MBS
                 }
 
 
+                for (int i = 0; i < dataGridView1.Rows.Count; i++)
+                {
+                    if (dataGridView1[0, i].Value.ToString() == textBox1.Text)
+                    {
+                        App.executeNonQuery("DELETE FROM opname WHERE KodeBarang = '" + dataGridView1[0, i].Value.ToString() + "'");
+                        App.executeNonQuery("INSERT INTO opname SET KodeBarang = '" + dataGridView1[0, i].Value.ToString() + "', NamaBarang = '" + dataGridView1[1, i].Value.ToString() + "', Jumlah = '" + dataGridView1[2, i].Value.ToString() + "', SelisihJumlah = '" + dataGridView1[3, i].Value.ToString() + "', Gudang = '" + dataGridView1[4, i].Value.ToString() + "', SelisihGudang = '" + dataGridView1[5, i].Value.ToString() + "'");
+                    }
+                }
+
+                loadOpname();
+
                 dataGridView1.ClearSelection();
                 selectLastInput(textBox1.Text);
 
@@ -268,6 +281,11 @@ namespace MBS
             {
                 textBox2.Focus();
             }
+
+            if (e.KeyCode == Keys.F5)
+            {
+                loadOpname();
+            }
         }
 
         private void textBox2_KeyDown(object sender, KeyEventArgs e)
@@ -296,20 +314,34 @@ namespace MBS
 
         private void button3_Click(object sender, EventArgs e)
         {
-            App.executeNonQuery("DELETE FROM opname");
-
-            for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            DialogResult result = MessageBox.Show("Hapus daftar opname?", "Hapus", MessageBoxButtons.OKCancel);
+            if (result == DialogResult.OK)
             {
-                App.executeNonQuery("INSERT INTO opname SET KodeBarang = '" + dataGridView1[0, i].Value.ToString() + "', NamaBarang = '" + dataGridView1[1, i].Value.ToString() + "', Jumlah = '" + dataGridView1[2, i].Value.ToString() + "', SelisihJumlah = '" + dataGridView1[3, i].Value.ToString() + "', Gudang = '" + dataGridView1[4, i].Value.ToString() + "', SelisihGudang = '" + dataGridView1[5, i].Value.ToString() + "'");
+                App.executeNonQuery("DELETE FROM opname");
+                MessageBox.Show("Data opname berhasil dihapus");
             }
-            MessageBox.Show("Data Opname berhasil disimpan");
+
+            //App.executeNonQuery("DELETE FROM opname");
+
+            //for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            //{
+            //    App.executeNonQuery("INSERT INTO opname SET KodeBarang = '" + dataGridView1[0, i].Value.ToString() + "', NamaBarang = '" + dataGridView1[1, i].Value.ToString() + "', Jumlah = '" + dataGridView1[2, i].Value.ToString() + "', SelisihJumlah = '" + dataGridView1[3, i].Value.ToString() + "', Gudang = '" + dataGridView1[4, i].Value.ToString() + "', SelisihGudang = '" + dataGridView1[5, i].Value.ToString() + "'");
+            //}
+            //MessageBox.Show("Data Opname berhasil disimpan");
         }
 
         private void dataGridView1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete)
             {
-                dataGridView1.Rows.RemoveAt(dataGridView1.CurrentRow.Index);
+                DialogResult result = MessageBox.Show("Hapus lorisan barang ini?", "Hapus", MessageBoxButtons.OKCancel);
+                if (result == DialogResult.OK)
+                {
+                    App.executeNonQuery("DELETE FROM opname WHERE KodeBarang = '" + dataGridView1[0, dataGridView1.CurrentCell.RowIndex].Value.ToString() + "'");
+                    dataGridView1.Rows.RemoveAt(dataGridView1.CurrentRow.Index);
+
+                }
+
             }
 
             if (e.KeyCode == Keys.Enter)
@@ -321,35 +353,40 @@ namespace MBS
 
         private void button2_Click(object sender, EventArgs e)
         {
-            string tanggal = DateTime.Now.ToShortDateString();
-            int jumlah, gudang;
-            for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            DialogResult result = MessageBox.Show("Simpan Opname?", "Simpan", MessageBoxButtons.OKCancel);
+            if (result == DialogResult.OK)
             {
-                jumlah = Convert.ToInt32(dataGridView1[2, i].Value);
-                gudang = Convert.ToInt32(dataGridView1[4, i].Value);
-
-                if (jumlah > 0 && gudang == 0)
+                loadOpname();
+                string tanggal = DateTime.Now.ToShortDateString();
+                int jumlah, gudang;
+                for (int i = 0; i < dataGridView1.Rows.Count; i++)
                 {
-                    App.executeNonQuery("UPDATE barang SET Jumlah = '" + jumlah + "', Opname = '" + tanggal + "' WHERE Kodebarang = '" + dataGridView1[0, i].Value.ToString() + "'");
+                    jumlah = Convert.ToInt32(dataGridView1[2, i].Value);
+                    gudang = Convert.ToInt32(dataGridView1[4, i].Value);
 
-                }
-                else if (gudang > 0 && jumlah == 0)
-                {
-                    App.executeNonQuery("UPDATE barang SET Gudang = '" + jumlah + "', Opname = '" + tanggal + "' WHERE Kodebarang = '" + dataGridView1[0, i].Value.ToString() + "'");
+                    if (jumlah > 0 && gudang == 0)
+                    {
+                        App.executeNonQuery("UPDATE barang SET Jumlah = '" + jumlah + "', Opname = '" + tanggal + "' WHERE Kodebarang = '" + dataGridView1[0, i].Value.ToString() + "'");
 
-                }
-                else if (jumlah > 0 && gudang > 0)
-                {
-                    App.executeNonQuery("UPDATE barang SET Jumlah = '" + jumlah + "', Gudang = '" + gudang + "', Opname = '" + tanggal + "' WHERE Kodebarang = '" + dataGridView1[0, i].Value.ToString() + "'");
+                    }
+                    else if (gudang > 0 && jumlah == 0)
+                    {
+                        App.executeNonQuery("UPDATE barang SET Gudang = '" + jumlah + "', Opname = '" + tanggal + "' WHERE Kodebarang = '" + dataGridView1[0, i].Value.ToString() + "'");
 
+                    }
+                    else if (jumlah > 0 && gudang > 0)
+                    {
+                        App.executeNonQuery("UPDATE barang SET Jumlah = '" + jumlah + "', Gudang = '" + gudang + "', Opname = '" + tanggal + "' WHERE Kodebarang = '" + dataGridView1[0, i].Value.ToString() + "'");
+
+                    }
                 }
+                App.executeNonQuery("DELETE FROM opname");
+
+                printOpname();
+
+                MessageBox.Show("Opname berhasil dimasukkan");
+                Close();
             }
-            App.executeNonQuery("DELETE FROM opname");
-
-            printOpname();
-
-            MessageBox.Show("Opname berhasil dimasukkan");
-            Close();
         }
 
         private void printOpname()
@@ -409,6 +446,11 @@ namespace MBS
                 }
             }
 
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            loadOpname();
         }
     }
 }
