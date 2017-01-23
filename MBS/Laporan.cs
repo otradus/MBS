@@ -84,6 +84,11 @@ namespace MBS
 
             comboBox5.Text = DateTime.Now.ToShortDateString().Substring(3, 2);
             textBox8.Text = DateTime.Now.Year.ToString();
+
+            //Grafik Penjualan per Barang
+            App.formatDataGridView(dataGridView11);
+            App.DoubleBuffered(dataGridView11, true);
+            App.autoResizeDataGridView(dataGridView11);
         }
 
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
@@ -726,6 +731,90 @@ namespace MBS
             {
                 Close();
             }
+        }
+
+        private void textBox18_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                dataGridView11.Rows.Clear();
+
+                DataTable dt = App.executeReader("SELECT KodeBarang, NamaBarang, Jumlah, Gudang FROM barang WHERE NamaBarang LIKE '%" + textBox18.Text + "%'");
+                foreach (DataRow row in dt.Rows)
+                {
+                    dataGridView11.Rows.Add(row[0].ToString(), row[1].ToString(), row[2].ToString(), row[3].ToString());
+                }
+            }
+        }
+
+        private void chart2Load()
+        {
+            chart2.Series.Clear();
+            chart2.Series.Add("Penjualan");
+            chart2.Series.Add("Pembelian");
+            chart2.Series["Penjualan"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Column;
+            chart2.Series["Pembelian"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Column;
+            chart2.Series["Penjualan"].IsValueShownAsLabel = true;
+            chart2.Series["Pembelian"].IsValueShownAsLabel = true;
+
+            int pembelian = 0;
+            int penjualan = 0;
+            string tanggalterakhir = "";
+
+            DataTable dt = App.executeReader("SELECT Tanggal, Jumlah FROM penjualan WHERE KodeBarang = '" + dataGridView11[0, dataGridView11.CurrentCell.RowIndex].Value.ToString() + "'");
+            foreach (DataRow row in dt.Rows)
+            {
+                chart2.Series["Penjualan"].Points.AddXY(row[0].ToString(), row[1].ToString());
+                penjualan += Convert.ToInt32(row[1].ToString());
+                tanggalterakhir = row[0].ToString();
+            }
+
+            DataTable dtbeli = App.executeReader("SELECT Tanggal, Jumlah FROM pembelian WHERE KodeBarang = '" + dataGridView11[0, dataGridView11.CurrentCell.RowIndex].Value.ToString() + "'");
+            foreach (DataRow row in dtbeli.Rows)
+            {
+                chart2.Series["Pembelian"].Points.AddXY(row[0].ToString(), row[1].ToString());
+                pembelian += Convert.ToInt32(row[1].ToString());
+            }
+            dataGridView11[4, dataGridView11.CurrentCell.RowIndex].Value = (pembelian - penjualan).ToString();
+            dataGridView11[5, dataGridView11.CurrentCell.RowIndex].Value = tanggalterakhir;
+        }
+
+        private void dataGridView11_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            chart2Load();
+        }
+
+        private void dataGridView11_SelectionChanged(object sender, EventArgs e)
+        {
+            chart2Load();
+        }
+
+        private void dataGridView11_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                DialogResult result = MessageBox.Show("Hapus barang ini?", "Hapus", MessageBoxButtons.OKCancel);
+                if (result == DialogResult.OK)
+                {
+                    App.executeNonQuery("DELETE FROM barang WHERE KodeBarang = '" + dataGridView11[0, dataGridView11.CurrentCell.RowIndex].Value.ToString() + "'");
+                    MessageBox.Show("Barang berhasil dihapus");
+
+                    dataGridView11.Rows.Clear();
+
+                    DataTable dt = App.executeReader("SELECT KodeBarang, NamaBarang, Jumlah, Gudang FROM barang WHERE NamaBarang LIKE '%" + textBox18.Text + "%'");
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        dataGridView11.Rows.Add(row[0].ToString(), row[1].ToString(), row[2].ToString(), row[3].ToString());
+                    }
+
+                    chart2.Series.Clear();
+                }
+            }
+        }
+
+        private void dataGridView2_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            showPenjualanHarian(dataGridView3, dataGridView2[1, dataGridView2.CurrentCell.RowIndex].Value.ToString());
         }
     }
 }

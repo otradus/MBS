@@ -451,6 +451,7 @@ namespace MBS
         private void button4_Click(object sender, EventArgs e)
         {
             loadOpname();
+            colorTable();
         }
     }
 }

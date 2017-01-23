@@ -102,7 +102,7 @@ namespace MBS
         private void button4_Click(object sender, EventArgs e)
         {
             Barang barang = new Barang();
-            barang.ShowDialog();
+            barang.Show();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -283,7 +283,7 @@ namespace MBS
                 if (Args.admin == true)
                 {
                     Laporan laporan = new Laporan();
-                    laporan.ShowDialog();
+                    laporan.Show();
                 }
             }
 
