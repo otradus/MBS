@@ -31,7 +31,7 @@ namespace MBS
                 this.Show();
                 App.formatDataGridView(dataGridView1);
                 App.DoubleBuffered(dataGridView1, true);
-                App.loadTable(dataGridView1, "SELECT KodeBarang, NamaBarang, Kelompok, Satuan, HargaJual, Jumlah, Gudang, Opname FROM barang WHERE Kelompok = 'PIGEON'");
+                App.loadTable(dataGridView1, "SELECT KodeBarang, NamaBarang, Kelompok, Satuan, HargaJual, Jumlah, Gudang, Opname FROM barang WHERE Kelompok = 'Zwitsal'");
                 App.fillColumn(dataGridView1, 1);
                 colorJumlah();
                 //dataGridView1.Columns[1].FillWeight = 60;

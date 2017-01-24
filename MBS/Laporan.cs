@@ -685,7 +685,7 @@ namespace MBS
             textBox16.Text = dataGridView10[7, dataGridView10.CurrentCell.RowIndex].Value.ToString();
             textBox17.Text = dataGridView10[8, dataGridView10.CurrentCell.RowIndex].Value.ToString();
 
-            if (dataGridView10[9,dataGridView10.CurrentCell.RowIndex].Value.ToString() == "SELESAI")
+            if (dataGridView10[9, dataGridView10.CurrentCell.RowIndex].Value.ToString() == "SELESAI")
             {
                 checkBox1.Checked = true;
             }
@@ -715,7 +715,7 @@ namespace MBS
                 DialogResult result = MessageBox.Show("Ubah keterangan atau status barang ini?", "Keterangan", MessageBoxButtons.OKCancel);
                 if (result == DialogResult.OK)
                 {
-                    App.executeNonQuery("UPDATE retur SET Alasan = '" + textBox17.Text + "', Status = '" + selesai + "' WHERE Tanggal = '"+ textBox9.Text +"' AND Faktur = '"+ textBox10.Text +"' AND KodeBarang = '"+ textBox11.Text +"' AND User = '"+ textBox16.Text +"', AND Alasan = '"+ dataGridView10[8,dataGridView10.CurrentCell.RowIndex].Value.ToString() +"'");
+                    App.executeNonQuery("UPDATE retur SET Alasan = '" + textBox17.Text + "', Status = '" + selesai + "' WHERE Tanggal = '" + textBox9.Text + "' AND Faktur = '" + textBox10.Text + "' AND KodeBarang = '" + textBox11.Text + "' AND User = '" + textBox16.Text + "', AND Alasan = '" + dataGridView10[8, dataGridView10.CurrentCell.RowIndex].Value.ToString() + "'");
                     dataGridView10[8, dataGridView10.CurrentCell.RowIndex].Value = textBox17.Text;
                     dataGridView10[9, dataGridView10.CurrentCell.RowIndex].Value = selesai;
                     MessageBox.Show("Barang servis / cacad berhasil di update");
@@ -754,17 +754,21 @@ namespace MBS
             chart2.Series.Add("Pembelian");
             chart2.Series["Penjualan"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Column;
             chart2.Series["Pembelian"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Column;
+            chart2.Series["Penjualan"].XValueType = ChartValueType.DateTime;
+            chart2.Series["Pembelian"].XValueType = ChartValueType.DateTime;
             chart2.Series["Penjualan"].IsValueShownAsLabel = true;
             chart2.Series["Pembelian"].IsValueShownAsLabel = true;
+            //chart2.ChartAreas[0].AxisX.LabelStyle.Interval = 1;
 
             int pembelian = 0;
             int penjualan = 0;
             string tanggalterakhir = "";
+            string tanggalbeliterakhir = "";
 
             DataTable dt = App.executeReader("SELECT Tanggal, Jumlah FROM penjualan WHERE KodeBarang = '" + dataGridView11[0, dataGridView11.CurrentCell.RowIndex].Value.ToString() + "'");
             foreach (DataRow row in dt.Rows)
             {
-                chart2.Series["Penjualan"].Points.AddXY(row[0].ToString(), row[1].ToString());
+                chart2.Series["Penjualan"].Points.AddXY(Convert.ToDateTime(row[0].ToString()), row[1].ToString());
                 penjualan += Convert.ToInt32(row[1].ToString());
                 tanggalterakhir = row[0].ToString();
             }
@@ -772,11 +776,16 @@ namespace MBS
             DataTable dtbeli = App.executeReader("SELECT Tanggal, Jumlah FROM pembelian WHERE KodeBarang = '" + dataGridView11[0, dataGridView11.CurrentCell.RowIndex].Value.ToString() + "'");
             foreach (DataRow row in dtbeli.Rows)
             {
-                chart2.Series["Pembelian"].Points.AddXY(row[0].ToString(), row[1].ToString());
+                chart2.Series["Pembelian"].Points.AddXY(Convert.ToDateTime(row[0].ToString()), row[1].ToString());
                 pembelian += Convert.ToInt32(row[1].ToString());
+                if (row[0].ToString() != "")
+                {
+                    tanggalbeliterakhir = row[0].ToString();
+                }
             }
             dataGridView11[4, dataGridView11.CurrentCell.RowIndex].Value = (pembelian - penjualan).ToString();
-            dataGridView11[5, dataGridView11.CurrentCell.RowIndex].Value = tanggalterakhir;
+            dataGridView11[5, dataGridView11.CurrentCell.RowIndex].Value = tanggalbeliterakhir;
+            dataGridView11[6, dataGridView11.CurrentCell.RowIndex].Value = tanggalterakhir;
         }
 
         private void dataGridView11_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -815,6 +824,45 @@ namespace MBS
         private void dataGridView2_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             showPenjualanHarian(dataGridView3, dataGridView2[1, dataGridView2.CurrentCell.RowIndex].Value.ToString());
+        }
+
+        private void textBox19_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                DialogResult result = MessageBox.Show("Tampilkan semua barang sisa yang pembelian terakhir tahun tersebut? PERHATIAN: Harap sabar", "Tampilkan semua", MessageBoxButtons.OKCancel);
+                if (result == DialogResult.OK)
+                {
+                    string tanggalterakhir = "";
+                    chart2.Series.Clear();
+                    dataGridView11.Rows.Clear();
+
+                    DataTable dtbarang = App.executeReader("SELECT KodeBarang, NamaBarang, Jumlah, Gudang FROM barang WHERE Jumlah + Gudang > 0");
+                    DataTable dtpembelian;
+                    foreach (DataRow rowbarang in dtbarang.Rows)
+                    {
+                        if (Convert.ToInt32(App.executeScalar("SELECT COUNT(*) FROM pembelian WHERE KodeBarang = '" + rowbarang[0].ToString() + "'")) > 0)
+                        {
+                            dtpembelian = App.executeReader("SELECT Tanggal FROM pembelian WHERE KodeBarang = '" + rowbarang[0].ToString() + "'");
+                            foreach (DataRow rowtanggal in dtpembelian.Rows)
+                            {
+                                tanggalterakhir = rowtanggal[0].ToString();
+                            }
+
+                            if (tanggalterakhir != "")
+                            {
+                                if (tanggalterakhir.Substring(6) == textBox19.Text)
+                                {
+                                    dataGridView11.Rows.Add(rowbarang[0].ToString(), rowbarang[1].ToString(), rowbarang[2].ToString(), rowbarang[3].ToString(), "", tanggalterakhir);
+                                }
+                            }
+                        }
+
+                    }
+
+                    MessageBox.Show("Pencarian selesai!");
+                }
+            }
         }
     }
 }

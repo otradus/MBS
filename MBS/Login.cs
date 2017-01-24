@@ -60,20 +60,13 @@ namespace MBS
             }
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            if (DateTime.Now.Second % 4 == 0)
-            {
-                this.Close();
-            }
-        }
+       
 
         private void Login_Load(object sender, EventArgs e)
         {
             if (Args.admin == false)
             {
                 validate = true;
-                timer1.Start();
             }
         }
 
